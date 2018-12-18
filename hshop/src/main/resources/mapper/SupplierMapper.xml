@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.SupplierMapper" >
+  <resultMap id="BaseResultMap" type="com.entity.Supplier" >
+    <id column="SSID" property="ssid" jdbcType="DECIMAL" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="LOGDATE" property="logdate" jdbcType="TIMESTAMP" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SSID, ADDRESS, LOGDATE, NAME, PHONE
+  </sql>
+  
+  <select id="selectSupplierAll" resultMap="BaseResultMap">
+    SELECT * from SUPPLIER
+  </select>
+  <select id="select_supplierMap" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT * from SUPPLIER
+    <choose>
+      <when test="searchvalue!=null and searchvalue!=''">
+        where SSID||ADDRESS||LOGDATE||NAME||PHONE
+        LIKE '%'||#{searchvalue}||'%'
+        <if test="ssid!=null and ssid!=''">
+          and SSID = #{ssid}
+        </if>
+      </when>
+      <otherwise>
+        <if test="ssid!=null and ssid!=''">
+          where SSID = #{ssid}
+        </if>
+      </otherwise>
+    </choose>
+    <if test="sort != null and sort!=''">
+      order by ${sort}
+      <if test="order != null and order !=''">${order}</if>
+    </if>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from QSHOP.SUPPLIER
+    where SSID = #{ssid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from QSHOP.SUPPLIER
+    where SSID = #{ssid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Supplier" >
+    <selectKey keyProperty="ssid" resultType="long" order="BEFORE">
+      SELECT QSHOP_SUPP_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.SUPPLIER (SSID, ADDRESS, LOGDATE, 
+      NAME, PHONE)
+    values (#{ssid,jdbcType=DECIMAL}, #{address,jdbcType=VARCHAR}, #{logdate,jdbcType=TIMESTAMP}, 
+      #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Supplier" >
+    <selectKey keyProperty="ssid" resultType="long" order="BEFORE">
+      SELECT QSHOP_SUPP_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.SUPPLIER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="ssid != null" >
+        SSID,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="logdate != null" >
+        LOGDATE,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="phone != null" >
+        PHONE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="ssid != null" >
+        #{ssid,jdbcType=DECIMAL},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="logdate != null" >
+        #{logdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Supplier" >
+    update QSHOP.SUPPLIER
+    <set >
+      <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="logdate != null" >
+        LOGDATE = #{logdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where SSID = #{ssid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Supplier" >
+    update QSHOP.SUPPLIER
+    set ADDRESS = #{address,jdbcType=VARCHAR},
+      LOGDATE = #{logdate,jdbcType=TIMESTAMP},
+      NAME = #{name,jdbcType=VARCHAR},
+      PHONE = #{phone,jdbcType=VARCHAR}
+    where SSID = #{ssid,jdbcType=DECIMAL}
+  </update>
+</mapper>

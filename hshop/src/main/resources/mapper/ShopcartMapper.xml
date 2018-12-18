@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.ShopcartMapper" >
+  <resultMap id="BaseResultMap" type="com.entity.Shopcart" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="LOGDATE" property="logdate" jdbcType="TIMESTAMP" />
+    <result column="PRODUCTNUM" property="productnum" jdbcType="DECIMAL" />
+    <result column="PRODUCTID" property="productid" jdbcType="DECIMAL" />
+    <result column="VIPID" property="vipid" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, LOGDATE, PRODUCTNUM, PRODUCTID, VIPID
+  </sql>
+
+  <select id="select_shopcartAll" resultMap="BaseResultMap">
+    SELECT * from SHOPCART
+  </select>
+  <select id="select_shopcartMap" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT * from SHOPCART
+    <choose>
+      <when test="searchvalue!=null and searchvalue!=''">
+        where ID||LOGDATE||PRODUCTNUM||PRODUCTID||VIPID
+        LIKE '%'||#{searchvalue}||'%'
+        <if test="id!=null and id!=''">
+          and ID = #{id}
+        </if>
+      </when>
+      <otherwise>
+        <if test="id!=null and id!=''">
+          where ID = #{id}
+        </if>
+      </otherwise>
+    </choose>
+    <if test="sort != null and sort!=''">
+      order by ${sort}
+      <if test="order != null and order !=''">${order}</if>
+    </if>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from QSHOP.SHOPCART
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from QSHOP.SHOPCART
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Shopcart" >
+    <selectKey keyProperty="id" resultType="long" order="BEFORE">
+      SELECT QSHOP_SHOPCART_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.SHOPCART (ID, LOGDATE, PRODUCTNUM, 
+      PRODUCTID, VIPID)
+    values (#{id,jdbcType=DECIMAL}, #{logdate,jdbcType=TIMESTAMP}, #{productnum,jdbcType=DECIMAL}, 
+      #{productid,jdbcType=DECIMAL}, #{vipid,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Shopcart" >
+    <selectKey keyProperty="id" resultType="long" order="BEFORE">
+      SELECT QSHOP_SHOPCART_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.SHOPCART
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="logdate != null" >
+        LOGDATE,
+      </if>
+      <if test="productnum != null" >
+        PRODUCTNUM,
+      </if>
+      <if test="productid != null" >
+        PRODUCTID,
+      </if>
+      <if test="vipid != null" >
+        VIPID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="logdate != null" >
+        #{logdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="productnum != null" >
+        #{productnum,jdbcType=DECIMAL},
+      </if>
+      <if test="productid != null" >
+        #{productid,jdbcType=DECIMAL},
+      </if>
+      <if test="vipid != null" >
+        #{vipid,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Shopcart" >
+    update QSHOP.SHOPCART
+    <set >
+      <if test="logdate != null" >
+        LOGDATE = #{logdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="productnum != null" >
+        PRODUCTNUM = #{productnum,jdbcType=DECIMAL},
+      </if>
+      <if test="productid != null" >
+        PRODUCTID = #{productid,jdbcType=DECIMAL},
+      </if>
+      <if test="vipid != null" >
+        VIPID = #{vipid,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Shopcart" >
+    update QSHOP.SHOPCART
+    set LOGDATE = #{logdate,jdbcType=TIMESTAMP},
+      PRODUCTNUM = #{productnum,jdbcType=DECIMAL},
+      PRODUCTID = #{productid,jdbcType=DECIMAL},
+      VIPID = #{vipid,jdbcType=DECIMAL}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+</mapper>

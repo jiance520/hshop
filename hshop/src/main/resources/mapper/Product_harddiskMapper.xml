@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.Product_harddiskMapper" >
+  <resultMap id="BaseResultMap" type="com.entity.Product_harddisk" >
+    <id column="DRIVEID" property="driveid" jdbcType="DECIMAL" />
+    <result column="DRIVENAME" property="drivename" jdbcType="OTHER" />
+    <result column="PARAMETER" property="parameter" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    DRIVEID, DRIVENAME, PARAMETER, REMARK
+  </sql>
+
+  <select id="selectDiskAll" resultMap="BaseResultMap">
+    SELECT * from PRODUCT_HARDDISK
+  </select>
+  <select id="select_diskMap" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT * from PRODUCT_HARDDISK
+    <choose>
+      <when test="searchvalue!=null and searchvalue!=''">
+        where DRIVEID||DRIVENAME||PARAMETER||REMARK
+        LIKE '%'||#{searchvalue}||'%'
+        <if test="driveid!=null and driveid!=''">
+          and DRIVEID = #{driveid}
+        </if>
+      </when>
+      <otherwise>
+        <if test="driveid!=null and driveid!=''">
+          where DRIVEID = #{driveid}
+        </if>
+      </otherwise>
+    </choose>
+    <if test="sort != null and sort!=''">
+      order by ${sort}
+      <if test="order != null and order !=''">${order}</if>
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from QSHOP.PRODUCT_HARDDISK
+    where DRIVEID = #{driveid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from QSHOP.PRODUCT_HARDDISK
+    where DRIVEID = #{driveid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Product_harddisk" >
+    <selectKey keyProperty="driveid" resultType="long" order="BEFORE">
+      SELECT QSHOP_HDD_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.PRODUCT_HARDDISK (DRIVEID, DRIVENAME, PARAMETER, 
+      REMARK)
+    values (#{driveid,jdbcType=DECIMAL}, #{drivename,jdbcType=OTHER}, #{parameter,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Product_harddisk" >
+    <selectKey keyProperty="driveid" resultType="long" order="BEFORE">
+      SELECT QSHOP_HDD_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.PRODUCT_HARDDISK
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="driveid != null" >
+        DRIVEID,
+      </if>
+      <if test="drivename != null" >
+        DRIVENAME,
+      </if>
+      <if test="parameter != null" >
+        PARAMETER,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="driveid != null" >
+        #{driveid,jdbcType=DECIMAL},
+      </if>
+      <if test="drivename != null" >
+        #{drivename,jdbcType=OTHER},
+      </if>
+      <if test="parameter != null" >
+        #{parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Product_harddisk" >
+    update QSHOP.PRODUCT_HARDDISK
+    <set >
+      <if test="drivename != null" >
+        DRIVENAME = #{drivename,jdbcType=OTHER},
+      </if>
+      <if test="parameter != null" >
+        PARAMETER = #{parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where DRIVEID = #{driveid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Product_harddisk" >
+    update QSHOP.PRODUCT_HARDDISK
+    set DRIVENAME = #{drivename,jdbcType=OTHER},
+      PARAMETER = #{parameter,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where DRIVEID = #{driveid,jdbcType=DECIMAL}
+  </update>
+</mapper>

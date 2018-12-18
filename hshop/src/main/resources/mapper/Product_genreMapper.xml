@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.Product_genreMapper" >
+  <resultMap id="BaseResultMap" type="com.entity.Product_genre" >
+    <id column="GENREID" property="genreid" jdbcType="DECIMAL" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    GENREID, NAME, REMARK
+  </sql>
+
+  <select id="selectGenreAll" resultMap="BaseResultMap">
+    SELECT * from PRODUCT_GENRE
+  </select>
+  <select id="select_genreMap" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT * from PRODUCT_GENRE
+    <choose>
+      <when test="searchvalue!=null and searchvalue!=''">
+        where GENREID||NAME||REMARK
+        LIKE '%'||#{searchvalue}||'%'
+        <if test="genreid!=null and genreid!=''">
+          and GENREID = #{genreid}
+        </if>
+      </when>
+      <otherwise>
+        <if test="genreid!=null and genreid!=''">
+          where GENREID = #{genreid}
+        </if>
+      </otherwise>
+    </choose>
+    <if test="sort != null and sort!=''">
+      order by ${sort}
+      <if test="order != null and order !=''">${order}</if>
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from QSHOP.PRODUCT_GENRE
+    where GENREID = #{genreid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from QSHOP.PRODUCT_GENRE
+    where GENREID = #{genreid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Product_genre" >
+    <selectKey keyProperty="genreid" resultType="long" order="BEFORE">
+      SELECT QSHOP_GENRE_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.PRODUCT_GENRE (GENREID, NAME, REMARK
+      )
+    values (#{genreid,jdbcType=DECIMAL}, #{name,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Product_genre" >
+    <selectKey keyProperty="genreid" resultType="long" order="BEFORE">
+      SELECT QSHOP_GENRE_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.PRODUCT_GENRE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="genreid != null" >
+        GENREID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="genreid != null" >
+        #{genreid,jdbcType=DECIMAL},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Product_genre" >
+    update QSHOP.PRODUCT_GENRE
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where GENREID = #{genreid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Product_genre" >
+    update QSHOP.PRODUCT_GENRE
+    set NAME = #{name,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where GENREID = #{genreid,jdbcType=DECIMAL}
+  </update>
+</mapper>

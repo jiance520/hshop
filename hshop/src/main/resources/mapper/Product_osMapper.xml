@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.Product_osMapper" >
+  <resultMap id="BaseResultMap" type="com.entity.Product_os" >
+    <id column="OSID" property="osid" jdbcType="DECIMAL" />
+    <result column="NAME" property="name" jdbcType="OTHER" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    OSID, NAME, REMARK
+  </sql>
+
+  <select id="selectOsAll" resultMap="BaseResultMap">
+    SELECT * from PRODUCT_OS
+  </select>
+  <select id="select_osMap" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT * from PRODUCT_OS
+    <choose>
+      <when test="searchvalue!=null and searchvalue!=''">
+        where OSID||NAME||REMARK
+        LIKE '%'||#{searchvalue}||'%'
+        <if test="osid!=null and osid!=''">
+          and OSID = #{osid}
+        </if>
+      </when>
+      <otherwise>
+        <if test="osid!=null and osid!=''">
+          where OSID = #{osid}
+        </if>
+      </otherwise>
+    </choose>
+    <if test="sort != null and sort!=''">
+      order by ${sort}
+      <if test="order != null and order !=''">${order}</if>
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from QSHOP.PRODUCT_OS
+    where OSID = #{osid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from QSHOP.PRODUCT_OS
+    where OSID = #{osid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Product_os" >
+    <selectKey keyProperty="osid" resultType="long" order="BEFORE">
+      SELECT QSHOP_OS_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.PRODUCT_OS (OSID, NAME, REMARK
+      )
+    values (#{osid,jdbcType=DECIMAL}, #{name,jdbcType=OTHER}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Product_os" >
+    <selectKey keyProperty="osid" resultType="long" order="BEFORE">
+      SELECT QSHOP_OS_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.PRODUCT_OS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="osid != null" >
+        OSID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="osid != null" >
+        #{osid,jdbcType=DECIMAL},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=OTHER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Product_os" >
+    update QSHOP.PRODUCT_OS
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=OTHER},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where OSID = #{osid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Product_os" >
+    update QSHOP.PRODUCT_OS
+    set NAME = #{name,jdbcType=OTHER},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where OSID = #{osid,jdbcType=DECIMAL}
+  </update>
+</mapper>

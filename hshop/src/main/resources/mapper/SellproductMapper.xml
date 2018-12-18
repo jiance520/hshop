@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.SellproductMapper" >
+  <resultMap id="BaseResultMap" type="com.entity.Sellproduct" >
+    <id column="SPID" property="spid" jdbcType="DECIMAL" />
+    <result column="NUM" property="num" jdbcType="DECIMAL" />
+    <result column="PRODUCTID" property="productid" jdbcType="DECIMAL" />
+    <result column="ORDERID" property="orderid" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SPID, NUM, PRODUCTID, ORDERID
+  </sql>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    select * from SELLPRODUCT
+  </select>
+  <select id="selectSellInfo" resultType="java.util.Map">
+    select count(1) as num,pb.NAME from SELLPRODUCT se,product pr,product_brand pb where se.PRODUCTID = pr.PRODUCTID and pr.BRANDID = pb.BRANDID GROUP BY pb.NAME
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from QSHOP.SELLPRODUCT
+    where SPID = #{spid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from QSHOP.SELLPRODUCT
+    where SPID = #{spid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Sellproduct" >
+    <selectKey keyProperty="spid" resultType="long" order="BEFORE">
+      SELECT QSHOP_SELLPRO_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.SELLPRODUCT (SPID, NUM, PRODUCTID, 
+      ORDERID)
+    values (#{spid,jdbcType=DECIMAL}, #{num,jdbcType=DECIMAL}, #{productid,jdbcType=DECIMAL}, 
+      #{orderid,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Sellproduct" >
+    <selectKey keyProperty="spid" resultType="long" order="BEFORE">
+      SELECT QSHOP_SELLPRO_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.SELLPRODUCT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="spid != null" >
+        SPID,
+      </if>
+      <if test="num != null" >
+        NUM,
+      </if>
+      <if test="productid != null" >
+        PRODUCTID,
+      </if>
+      <if test="orderid != null" >
+        ORDERID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="spid != null" >
+        #{spid,jdbcType=DECIMAL},
+      </if>
+      <if test="num != null" >
+        #{num,jdbcType=DECIMAL},
+      </if>
+      <if test="productid != null" >
+        #{productid,jdbcType=DECIMAL},
+      </if>
+      <if test="orderid != null" >
+        #{orderid,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Sellproduct" >
+    update QSHOP.SELLPRODUCT
+    <set >
+      <if test="num != null" >
+        NUM = #{num,jdbcType=DECIMAL},
+      </if>
+      <if test="productid != null" >
+        PRODUCTID = #{productid,jdbcType=DECIMAL},
+      </if>
+      <if test="orderid != null" >
+        ORDERID = #{orderid,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where SPID = #{spid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Sellproduct" >
+    update QSHOP.SELLPRODUCT
+    set NUM = #{num,jdbcType=DECIMAL},
+      PRODUCTID = #{productid,jdbcType=DECIMAL},
+      ORDERID = #{orderid,jdbcType=DECIMAL}
+    where SPID = #{spid,jdbcType=DECIMAL}
+  </update>
+</mapper>

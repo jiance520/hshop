@@ -1,0 +1,78 @@
+    private IManagerService imanagerService ;
+    private IAdvertService iAdvertService;
+    private ICommentsService iCommentsService;
+    private IExpressService iExpressService;
+    private IFriendshipService iFriendshipService;
+    private IGradeService iGradeService;
+    private IManagerService iManagerService;
+    private IOrderstateService iOrderstateService;
+    private IProductService iProductService;
+    private IProduct_brandService iProduct_brandService;
+    private IProduct_cpuService iProduct_cpuService;
+    private IProduct_dvdromService iProduct_dvdromService;
+    private IProduct_featureService iProduct_featureService;
+    private IProduct_genreService iProduct_genreService;
+    private IProduct_graphicsService iProduct_graphicsService;
+    private IProduct_harddiskService iProduct_harddiskService;
+    private IProduct_osService iProduct_osService;
+    private IProduct_romService iProduct_romService;
+    private IProduct_screenService iProduct_screenService;
+    private IProduct_styleService iProduct_styleService;
+    private ISellorderService iSellorderService;
+    private ISellproductService iSellproductService;
+    private IServiceService iServiceService;
+    private IShopcartService iShopcartService;
+    private IShoplogService iShoplogService;
+    private ISupplierService iSupplierService;
+    private IVipService iVipService;
+
+    soid
+    logdate
+    ordernum
+    paystate
+    paytype
+    sum
+    expressid
+    orderstateid
+    vipid
+    postaddr
+    postname
+    postphone
+    remark
+    state
+
+    productid
+    alarmnum
+    discount
+    isdiscount
+    oneimg
+    price
+    productnum
+    productname
+    productno
+    threeimg
+    twoimg
+    brandid
+    cpuunitid
+    dvdromid
+    featureid
+    genreid
+    graphicsid
+    harddiskid
+    productosid
+    romid
+    screenid
+    productstyleid
+    productdesc
+    supplierid
+    logdate
+
+
+/img/brand/10922426408520.gif
+/img/brand/10922426526728.gif
+/img/brand/10922426610288.gif
+/img/brand/10922426720856.gif
+/img/brand/10922426789168.gif
+/img/brand/10922426865584.gif
+/img/brand/10922426945080.gif
+/img/brand/10922427070024.gif

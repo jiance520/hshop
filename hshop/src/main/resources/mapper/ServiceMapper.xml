@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.ServiceMapper" >
+  <resultMap id="BaseResultMap" type="com.entity.Service" >
+    <id column="SERVICEID" property="serviceid" jdbcType="DECIMAL" />
+    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+    <result column="LOGDATE" property="logdate" jdbcType="TIMESTAMP" />
+    <result column="MANAGEDATE" property="managedate" jdbcType="TIMESTAMP" />
+    <result column="MANAGEREMARK" property="manageremark" jdbcType="VARCHAR" />
+    <result column="MANAGESTATUS" property="managestatus" jdbcType="DECIMAL" />
+    <result column="ORDERNUM" property="ordernum" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="VIPID" property="vipid" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SERVICEID, CONTENT, LOGDATE, MANAGEDATE, MANAGEREMARK, MANAGESTATUS, ORDERNUM, REMARK, 
+    TITLE, VIPID
+  </sql>
+
+  <select id="select_serviceAll" resultMap="BaseResultMap">
+    SELECT * from SERVICE
+  </select>
+  <select id="select_serviceMap" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT * from SERVICE
+    <choose>
+      <when test="searchvalue!=null and searchvalue!=''">
+        where SERVICEID||CONTENT||LOGDATE||MANAGEDATE||MANAGEREMARK||MANAGEREMARK||MANAGESTATUS||ORDERNUM||REMARK||TITLE||VIPID
+        LIKE '%'||#{searchvalue}||'%'
+        <if test="serviceid!=null and serviceid!=''">
+          and SERVICEID = #{serviceid}
+        </if>
+      </when>
+      <otherwise>
+        <if test="serviceid!=null and serviceid!=''">
+          where SERVICEID = #{serviceid}
+        </if>
+      </otherwise>
+    </choose>
+    <if test="sort != null and sort!=''">
+      order by ${sort}
+      <if test="order != null and order !=''">${order}</if>
+    </if>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from QSHOP.SERVICE
+    where SERVICEID = #{serviceid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from QSHOP.SERVICE
+    where SERVICEID = #{serviceid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Service" >
+    <selectKey keyProperty="serviceid" resultType="long" order="BEFORE">
+      SELECT QSHOP_SERVICE_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.SERVICE (SERVICEID, CONTENT, LOGDATE, 
+      MANAGEDATE, MANAGEREMARK, MANAGESTATUS, 
+      ORDERNUM, REMARK, TITLE, 
+      VIPID)
+    values (#{serviceid,jdbcType=DECIMAL}, #{content,jdbcType=VARCHAR}, #{logdate,jdbcType=TIMESTAMP}, 
+      #{managedate,jdbcType=TIMESTAMP}, #{manageremark,jdbcType=VARCHAR}, #{managestatus,jdbcType=DECIMAL}, 
+      #{ordernum,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{vipid,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Service" >
+    <selectKey keyProperty="serviceid" resultType="long" order="BEFORE">
+      SELECT QSHOP_SERVICE_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.SERVICE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="serviceid != null" >
+        SERVICEID,
+      </if>
+      <if test="content != null" >
+        CONTENT,
+      </if>
+      <if test="logdate != null" >
+        LOGDATE,
+      </if>
+      <if test="managedate != null" >
+        MANAGEDATE,
+      </if>
+      <if test="manageremark != null" >
+        MANAGEREMARK,
+      </if>
+      <if test="managestatus != null" >
+        MANAGESTATUS,
+      </if>
+      <if test="ordernum != null" >
+        ORDERNUM,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="title != null" >
+        TITLE,
+      </if>
+      <if test="vipid != null" >
+        VIPID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="serviceid != null" >
+        #{serviceid,jdbcType=DECIMAL},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="logdate != null" >
+        #{logdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="managedate != null" >
+        #{managedate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="manageremark != null" >
+        #{manageremark,jdbcType=VARCHAR},
+      </if>
+      <if test="managestatus != null" >
+        #{managestatus,jdbcType=DECIMAL},
+      </if>
+      <if test="ordernum != null" >
+        #{ordernum,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="vipid != null" >
+        #{vipid,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Service" >
+    update QSHOP.SERVICE
+    <set >
+      <if test="content != null" >
+        CONTENT = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="logdate != null" >
+        LOGDATE = #{logdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="managedate != null" >
+        MANAGEDATE = #{managedate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="manageremark != null" >
+        MANAGEREMARK = #{manageremark,jdbcType=VARCHAR},
+      </if>
+      <if test="managestatus != null" >
+        MANAGESTATUS = #{managestatus,jdbcType=DECIMAL},
+      </if>
+      <if test="ordernum != null" >
+        ORDERNUM = #{ordernum,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="vipid != null" >
+        VIPID = #{vipid,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where SERVICEID = #{serviceid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Service" >
+    update QSHOP.SERVICE
+    set CONTENT = #{content,jdbcType=VARCHAR},
+      LOGDATE = #{logdate,jdbcType=TIMESTAMP},
+      MANAGEDATE = #{managedate,jdbcType=TIMESTAMP},
+      MANAGEREMARK = #{manageremark,jdbcType=VARCHAR},
+      MANAGESTATUS = #{managestatus,jdbcType=DECIMAL},
+      ORDERNUM = #{ordernum,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      TITLE = #{title,jdbcType=VARCHAR},
+      VIPID = #{vipid,jdbcType=DECIMAL}
+    where SERVICEID = #{serviceid,jdbcType=DECIMAL}
+  </update>
+</mapper>

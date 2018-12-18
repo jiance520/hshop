@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.VipMapper" >
+  <resultMap id="BaseResultMap" type="com.entity.Vip" >
+    <id column="VID" property="vid" jdbcType="DECIMAL" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="BORNDATE" property="borndate" jdbcType="TIMESTAMP" />
+    <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+    <result column="GENDER" property="gender" jdbcType="DECIMAL" />
+    <result column="LOGDATE" property="logdate" jdbcType="TIMESTAMP" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR" />
+    <result column="PHONE" property="phone" jdbcType="VARCHAR" />
+    <result column="POINT" property="point" jdbcType="DECIMAL" />
+    <result column="STATUS" property="status" jdbcType="DECIMAL" />
+    <result column="USERNAME" property="username" jdbcType="VARCHAR" />
+    <result column="GRADEID" property="gradeid" jdbcType="DECIMAL" />
+    <result column="QUESTION" property="question" jdbcType="VARCHAR" />
+    <result column="ANSWER" property="answer" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    VID, ADDRESS, BORNDATE, EMAIL, GENDER, LOGDATE, NAME, PASSWORD, PHONE, POINT, STATUS, 
+    USERNAME, GRADEID, QUESTION, ANSWER
+  </sql>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    SELECT * FROM VIP
+  </select>
+  <select id="select_vipMap" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT * from VIP
+    <choose>
+      <when test="searchvalue!=null and searchvalue!=''">
+        where VID||ADDRESS||BORNDATE||EMAIL||GENDER||LOGDATE||NAME||PASSWORD||PHONE||POINT||STATUS||USERNAME||GRADEID||QUESTION||ANSWER
+        LIKE '%'||#{searchvalue}||'%'
+        <if test="vid!=null and vid!=''">
+          and VID = #{vid}
+        </if>
+      </when>
+      <otherwise>
+        <if test="vid!=null and vid!=''">
+          where VID = #{vid}
+        </if>
+      </otherwise>
+    </choose>
+    <if test="sort != null and sort!=''">
+      order by ${sort}
+      <if test="order != null and order !=''">${order}</if>
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from QSHOP.VIP
+    where VID = #{vid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from QSHOP.VIP
+    where VID = #{vid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Vip" >
+    <selectKey keyProperty="vid" resultType="long" order="BEFORE">
+      SELECT QSHOP_VIP_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.VIP (VID, ADDRESS, BORNDATE, 
+      EMAIL, GENDER, LOGDATE, 
+      NAME, PASSWORD, PHONE, 
+      POINT, STATUS, USERNAME, 
+      GRADEID, QUESTION, ANSWER
+      )
+    values (#{vid,jdbcType=DECIMAL}, #{address,jdbcType=VARCHAR}, #{borndate,jdbcType=TIMESTAMP}, 
+      #{email,jdbcType=VARCHAR}, #{gender,jdbcType=DECIMAL}, #{logdate,jdbcType=TIMESTAMP}, 
+      #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{point,jdbcType=DECIMAL}, #{status,jdbcType=DECIMAL}, #{username,jdbcType=VARCHAR}, 
+      #{gradeid,jdbcType=DECIMAL}, #{question,jdbcType=VARCHAR}, #{answer,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Vip" >
+    <selectKey keyProperty="vid" resultType="long" order="BEFORE">
+      SELECT QSHOP_VIP_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.VIP
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="vid != null" >
+        VID,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="borndate != null" >
+        BORNDATE,
+      </if>
+      <if test="email != null" >
+        EMAIL,
+      </if>
+      <if test="gender != null" >
+        GENDER,
+      </if>
+      <if test="logdate != null" >
+        LOGDATE,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="password != null" >
+        PASSWORD,
+      </if>
+      <if test="phone != null" >
+        PHONE,
+      </if>
+      <if test="point != null" >
+        POINT,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="username != null" >
+        USERNAME,
+      </if>
+      <if test="gradeid != null" >
+        GRADEID,
+      </if>
+      <if test="question != null" >
+        QUESTION,
+      </if>
+      <if test="answer != null" >
+        ANSWER,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="vid != null" >
+        #{vid,jdbcType=DECIMAL},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="borndate != null" >
+        #{borndate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=DECIMAL},
+      </if>
+      <if test="logdate != null" >
+        #{logdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="point != null" >
+        #{point,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="gradeid != null" >
+        #{gradeid,jdbcType=DECIMAL},
+      </if>
+      <if test="question != null" >
+        #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null" >
+        #{answer,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Vip" >
+    update QSHOP.VIP
+    <set >
+      <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="borndate != null" >
+        BORNDATE = #{borndate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="email != null" >
+        EMAIL = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        GENDER = #{gender,jdbcType=DECIMAL},
+      </if>
+      <if test="logdate != null" >
+        LOGDATE = #{logdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        PASSWORD = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        PHONE = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="point != null" >
+        POINT = #{point,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=DECIMAL},
+      </if>
+      <if test="username != null" >
+        USERNAME = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="gradeid != null" >
+        GRADEID = #{gradeid,jdbcType=DECIMAL},
+      </if>
+      <if test="question != null" >
+        QUESTION = #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null" >
+        ANSWER = #{answer,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where VID = #{vid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Vip" >
+    update QSHOP.VIP
+    set ADDRESS = #{address,jdbcType=VARCHAR},
+      BORNDATE = #{borndate,jdbcType=TIMESTAMP},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      GENDER = #{gender,jdbcType=DECIMAL},
+      LOGDATE = #{logdate,jdbcType=TIMESTAMP},
+      NAME = #{name,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      PHONE = #{phone,jdbcType=VARCHAR},
+      POINT = #{point,jdbcType=DECIMAL},
+      STATUS = #{status,jdbcType=DECIMAL},
+      USERNAME = #{username,jdbcType=VARCHAR},
+      GRADEID = #{gradeid,jdbcType=DECIMAL},
+      QUESTION = #{question,jdbcType=VARCHAR},
+      ANSWER = #{answer,jdbcType=VARCHAR}
+    where VID = #{vid,jdbcType=DECIMAL}
+  </update>
+</mapper>

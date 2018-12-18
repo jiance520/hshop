@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.OrderstateMapper" >
+  <resultMap id="BaseResultMap" type="com.entity.Orderstate" >
+    <id column="STATEID" property="stateid" jdbcType="DECIMAL" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="STATETYPE" property="statetype" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    STATEID, REMARK, STATETYPE
+  </sql>
+
+ <select id="selectOrderStateAll" resultMap="BaseResultMap">
+   SELECT * FROM ORDERSTATE
+ </select>
+    <select id="select_orderstateMap" resultType="java.util.Map" parameterType="java.util.Map">
+        SELECT * from ORDERSTATE
+        <choose>
+            <when test="searchvalue!=null and searchvalue!=''">
+                where STATEID||REMARK||STATETYPE
+                LIKE '%'||#{searchvalue}||'%'
+                <if test="stateid!=null and stateid!=''">
+                    and STATEID = #{stateid}
+                </if>
+            </when>
+            <otherwise>
+                <if test="stateid!=null and stateid!=''">
+                    where STATEID = #{stateid}
+                </if>
+            </otherwise>
+        </choose>
+        <if test="sort != null and sort!=''">
+            order by ${sort}
+            <if test="order != null and order !=''">${order}</if>
+        </if>
+    </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from QSHOP.ORDERSTATE
+    where STATEID = #{stateid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from QSHOP.ORDERSTATE
+    where STATEID = #{stateid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Orderstate" >
+      <selectKey keyProperty="stateid" resultType="long" order="BEFORE">
+          SELECT QSHOP_ORDS_SEQ.nextval FROM dual
+      </selectKey>
+    insert into QSHOP.ORDERSTATE (STATEID, REMARK, STATETYPE
+      )
+    values (#{stateid,jdbcType=DECIMAL}, #{remark,jdbcType=VARCHAR}, #{statetype,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Orderstate" >
+      <selectKey keyProperty="stateid" resultType="long" order="BEFORE">
+          SELECT QSHOP_ORDS_SEQ.nextval FROM dual
+      </selectKey>
+    insert into QSHOP.ORDERSTATE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="stateid != null" >
+        STATEID,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="statetype != null" >
+        STATETYPE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="stateid != null" >
+        #{stateid,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="statetype != null" >
+        #{statetype,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Orderstate" >
+    update QSHOP.ORDERSTATE
+    <set >
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="statetype != null" >
+        STATETYPE = #{statetype,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where STATEID = #{stateid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Orderstate" >
+    update QSHOP.ORDERSTATE
+    set REMARK = #{remark,jdbcType=VARCHAR},
+      STATETYPE = #{statetype,jdbcType=VARCHAR}
+    where STATEID = #{stateid,jdbcType=DECIMAL}
+  </update>
+</mapper>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--<meta http-equiv="Content-Type" content="multipart/form-data;charset=utf-8" />-->
+    <link rel="stylesheet" type="text/css" href="../css/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="../css/themes/icon.css">
+    <script type="text/javascript" src="../js/jquery-1.12.4.js"></script>
+    <script type="text/javascript" src="../js/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="../js/datagrid-detailview.js"></script>
+    <script type="text/javascript">
+    </script>
+    <style type="text/css">
+    </style>
+</head>
+<body>
+
+<div id="feature_content">
+    <div id="feature_toolbar" style="padding:2px 0">
+        <table cellpadding="0" cellspacing="0" style="width:100%">
+            <tr>
+                <td style="padding-left:2px">
+                    <a href="javascript:void(0)" id="icon_feature_add" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加特性信息</a>
+                    <!--<a href="javascript:void(0)" class="easyui-linkbutton" data-options="plain:true" onclick="myCheckAll()">-->
+                        <!--<img src="../css/themes/icons/select.png" alt="select" style="vertical-align:middle"/>全选</a>&lt;!&ndash;主页要改路径&ndash;&gt;-->
+                    <!--<a href="javascript:void(0)" class="easyui-linkbutton" onclick="feature_outxlsx()">导出到excel</a>-->
+                    <!--<form id='form_feature' name="myform" class=easyui-form style="display: inline-block" method="post" action="../out_featureAction" enctype="multipart/form-data">-->
+                        <!--<input id="file_feature" name="excelfile" class="easyui-filebox" data-options="buttonText:'导入excel', accept:'application/vnd.ms-excel' "/>&lt;!&ndash;限制上传的文件为excel&ndash;&gt;-->
+                    <!--</form>-->
+                    <!--<a href="javascript:void(0)" class="easyui-linkbutton" onclick="feature_inxlsx()">提交</a>-->
+                </td>
+                <td style="text-align:right;padding-right:2px">
+                    <input id="feature_search" class="easyui-searchbox" data-options="prompt:'输入特性名称或编号'" style="width:150px" onclick="submit_featureSearch()"/>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submit_featureSearch()">搜索</a>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <table id="feature_dg" class="easyui-datagrid" title=""
+           data-options="singleSelect:false,rownumbers:false,collapsible:true,url:'../featureAllAjax',method:'post',cache:false"><!--主页要改路径-->
+    </table>
+    <!--win_feature_add只能放在父页面，放子页面样式无效-->
+    <div id="win_feature_add" class="easyui-window" title="增加特性" style="padding:10px 60px 20px 60px" data-options="iconCls:'icon-add',modal:true,closed:'true'">
+        <form id="form_feature_add" class="easyui-form" method="post"  data-options="novalidate:false">
+            <table cellpadding="5">
+                <tr>
+                    <td style="padding:10px 0 10px 0;" align="right">特性名称:</td>
+                    <td><input class="easyui-textbox" type="text" name="name" data-options="required:true,missingMessage:'不能为空'" title=""/></td>
+                </tr>
+                <tr>
+                    <td style="padding:10px 0 10px 0;" align="right">参数:</td>
+                    <td><input class="easyui-textbox" type="text" name="parameter" data-options="required:true,missingMessage:'不能为空'" title=""/></td>
+                </tr>
+                <tr>
+                    <td style="padding:10px 0 10px 0;" align="right">备注:</td>
+                    <td><input class="easyui-textbox" type="text" name="remark" data-options="required:true,missingMessage:'不能为空'" title=""/></td>
+                </tr>
+            </table>
+        </form>
+        <div style="text-align:center;padding:5px">
+            <button class="btn bg-primary navbar-btn" onclick="submit_featureAdd()">保存</button>
+            <button class="btn bg-primary navbar-btn" onclick="win_feature_close('#win_feature_add')">返回</button>
+        </div>
+    </div>
+
+    <div id="win_feature_edit" class="easyui-window" title="特性信息修改" style="padding:10px 60px 20px 60px;width:1200px;height:800px;" data-options="modal:true,closed:'true'"></div>
+    <div id="win_feature_show" class="easyui-window" title="特性信息详情" style="padding:10px 60px 20px 60px;width:600px;height:auto;" data-options="modal:true,closed:'true'">
+        <table cellpadding="5">
+            <tr>
+                <td style="padding:10px 0 10px 0;" align="right">特性编号:</td>
+                <td class="featureid" style="color:red"></td>
+            </tr>
+            <tr>
+                <td style="padding:10px 0 10px 0;" align="right">特性名称:</td>
+                <td class="name" style="color:red"></td>
+            </tr>
+            <tr>
+                <td style="padding:10px 0 10px 0;" align="right">参数:</td>
+                <td class="parameter" style="color:red"></td>
+            </tr>
+            <tr>
+                <td style="padding:10px 0 10px 0;" align="right">备注:</td>
+                <td class="remark" style="color:red"></td>
+            </tr>
+        </table>
+        <div style="text-align:center;padding:5px">
+            <button class="btn bg-primary navbar-btn" onclick="win_feature_close('#win_feature_show')">返回</button>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var ovalue;//保存当前模糊查询数据
+        var osort;//排序的列,也可以使用sortable:true，在用户点击列头时，easyui自动把sort和order发送给url后台。
+        var oorder;//排序方式
+        $(document).ready(function () {
+            $('#feature_dg').datagrid({
+                //真正的自动展开/收缩列的大小，以适应网格的宽度，防止水平滚动。
+                fitColumns:true,
+                //隔行变色
+                striped:true,
+                //是否显示行号
+//        rownumbers:true,
+//        工具栏在最下面
+//        fit:true,
+                //分页工具位置
+                // pagePosition:'top',
+                //显示用户详情
+                view:detailview,
+                detailFormatter: function(rowIndex, rowData){
+                    // admin = undefined
+                    // if(rowData.admin==0)admin='前台'
+                    // else admin='后台'
+                    if(rowData.IMG!=null&&rowData.IMG!=false){
+                        var imgpath1 = rowData.IMG;
+                        if(imgpath1.substring(0,1)=='/'){
+                            imgpath1 = imgpath1.substring(1);
+                        }
+                        var detailTable=
+                            '<div style="text-align:center;">'+
+                            '<img src="../'+imgpath1+'"style="height:300px;"/>'+
+                            '</div>';
+                        return detailTable;
+                    }
+                },
+                columns:[[
+                    {field:'ck',checkbox:true},
+                    {field:'NAME',title:'特性名称',width:150,align:'center',editor:'text',sortable:true},
+                    {field:'PARAMETER',title:'参数',width:150,align:'center',editor:'text',sortable:true},
+                    {field:'REMARK',title:'备注',width:150,align:'center',editor:'text',sortable:true},
+                    {field:'action',title:'操作',width:100,align:'center',
+                        formatter:function(value,row,index){ // value ：当前值，row:行对象，index:行下标
+                            if (row.editing){ // row.editing 是否被编辑
+                                var s = '<a href="javascript:void(0)"  onclick="feature_saverow('+index+')">保存</a> ';
+                                var c = '<a href="javascript:void(0)"  onclick="feature_cancelrow('+index+')">取消</a>';
+                                return s+c;
+                            } else {
+                                var e = '<a href="javascript:void(0)"  onclick="feature_editrow('+index+')">编辑</a> ';
+                                var d = '<a href="javascript:void(0)"  onclick="feature_deleterow('+index+')">删除</a> ';
+                                var f = '<a href="javascript:void(0)"  onclick="feature_showrow('+index+')">查看</a>';
+                                return e+d+f;
+                            }
+                        }
+                    }
+                ]],
+                onBeforeEdit:function(index,row){
+                    row.editing = true;
+                    //重新刷新行
+                    $('#feature_dg').datagrid('refreshRow', index);
+                },
+                onAfterEdit:function(index,row){
+                    row.editing = false;
+                    //重新刷新行
+                    //$('#feature_dg').datagrid('refreshRow', index);
+                    //如果有时间字段，使用以下代码刷新。
+                    var jstr = JSON.stringify(row);//对象转 json string
+//            var sobj = JSON.parse(jstr); //json string 转 js对象
+//            var dt = sobj.creationDate;
+//            var dt2 = dt.split(" ")[0];
+//            dt2 = dt2.split("/");
+//            var times = dt2[2]+"-"+dt2[0]+"-"+dt2[1];//转换后的时间
+//            sobj.creationDate = times ;
+//            alert(jstr);
+                    $.post('../update_featureAction',row,function(data){
+                        $('#feature_dg').datagrid('reload');
+                    });
+                },
+                onCancelEdit:function(index,row){
+                    row.editing = false;
+                    $('#feature_dg').datagrid('refreshRow', index);
+                },
+                onSortColumn:function(sort, order){
+                    osort = sort;
+                    oorder = order;
+                },
+                // sortName:'SUM',//排序的列,也可以使用sortable:true，在用户点击列头时，easyui自动把sort和order发送给url后台。
+                // sortOrder:'asc',//排序方式
+                pagination:true,
+                pageSize:8,
+                pageList:[8,16,24],
+                toolbar:"#feature_toolbar"
+            });
+            //设置分页控件
+            var pager = $('#feature_dg').datagrid('getPager');
+            $(pager).pagination({
+//        pageSize: 5,//每页显示的记录条数，默认为10
+//        pageList: [5,10,15],//可以设置每页记录条数的列表
+                beforePageText: '第',//页数文本框前显示的汉字
+                afterPageText: '页    共 {pages} 页',
+                displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录',
+            });
+//增加特性信息
+            $('#icon_feature_add').click(function () {
+                $("#win_feature_add").window('open');
+            });
+
+        });
+        //信息查看
+        //    点击特性信息，加载数据表格的feature_showrow方法，以及获数据表格的js，
+        //此时js和数据表格都在feature主页，主页通过rowaction，加载feature_show
+        function feature_showrow(index) {
+            var rows = $('#feature_dg').datagrid('getRows');
+            var row = rows[index];
+            var id = row.SOID;
+            // alert(JSON.stringify(row));
+            $('.featureid').html(row.FEATUREID);
+            $('.name').html(row.NAME);
+            $('.parameter').html(row.PARAMETER);
+            $('.remark').html(row.REMARK);
+            $('#win_feature_show').window('open');
+            $('#win_feature_show').css({"height":"auto"});
+            //
+            // $('#dialog_feature_show').dialog('open');
+            // $('#dialog_feature_show').dialog('refresh', 'feature/feature_show.jsp');/*通过ajax读取窗口内容。*/
+        }
+        <!--下拉选择菜单-->
+        //        $.post("../prviderAction",{},function (data) {
+        ////            $(".providerid").html("");/*empty()*/
+        //            $.each(data,function (i,n) {
+        //                var node = "<option>";
+        //                $("[name='providerid']").append($(node).val(n.id).html(n.proname));
+        //            });
+        //        },"json");
+        //导出xls
+        function feature_outxlsx() {
+            // $.post("../out_featureAction",{"ovalue":ovalue,"osort":osort,"oorder":oorder},function (data) {
+            // },'json');
+            window.location.href="../out_featureAction?ovalue="+ovalue+'&osort='+osort+"&oorder="+oorder;
+            //这里不能用ajax请求，ajax请求无法弹出下载保存对话框,ajax是异步。
+        }
+        //导入xls
+        function feature_inxlsx() {
+            var formData = new FormData($('#form_feature')[0]);/*用于传值给jsp*/
+            // var excel1 = document.myform.excelfile;/*这是一个input元素*/
+            var excel = document.myform.excelfile.files[0];/*这是一个File对象*/
+            // formData.append('newValue', "newValue");
+            $("#form_feature").form('submit', {
+                type:'POST',
+                // url: 'http://localhost:8090/hshop/upload',/*指定固定上传位置，但进不了后台*/
+                url: '../in_featureAction',
+                data: {'newValue':"newValue"},
+                cache: false,
+                processData: false,//禁止jquery对DAta数据的处理,默认会处理，//禁止的原因是,FormData已经帮我们做了处理
+                contentType: false,//禁止设置请求类型
+                onSubmit:function () {
+                    // if(confirm("是否提交")){
+                    //     return true;
+                    // }
+                    // else {
+                    //     return false;
+                    // }
+                },
+                success: function (result) {
+                    if(result!=0&&result!=false){
+                        $("#feature_dg").datagrid('reload');
+                    }
+                }
+            });
+        }
+        function feature_editrow(index){
+            // 开始编辑，发送命令
+            $('#feature_dg').datagrid('beginEdit', index);
+        }
+        function feature_deleterow(index){
+            $.messager.confirm('Confirm','是否删除当前行?',function(r){
+                if (r){
+                    // 得到所有行
+                    var rows = $('#feature_dg').datagrid('getRows');
+//                alert(rows.length);
+                    // 根据下标拿当前行的数据
+                    var row = rows[index];
+                    // 发送ajax
+                    $.post('../del_featureAction',row,function(data){
+//                    alert(data);
+                        if(data!=false&&data!=null){
+                            // 删除1行，发命令
+                            $('#feature_dg').datagrid('reload');
+//                    $('#feature_dg').datagrid('deleteRow', index);// todo 使用此命令，浏览器会报错，datagrid-detailview.js:71 Uncaught TypeError: Cannot read property '_expander' of undefined
+                            $('#feature_dg').datagrid('refreshRow', index);
+                        }
+                    },'json');
+
+                }
+            });
+        }
+        function feature_saverow(index){
+            // 结束编辑
+            $('#feature_dg').datagrid('endEdit', index);
+        }
+        function feature_cancelrow(index){
+            $('#feature_dg').datagrid('cancelEdit', index);
+        }
+        function feature_formatter(date){
+            var y = date.getFullYear();
+            var m = date.getMonth()+1;
+            var d = date.getDate();
+            return y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d);
+        }
+        function feature_formatter2(date){
+            var y = date.getFullYear();
+            var m = date.getMonth()+1;
+            var d = date.getDate();
+            var h = date.getHours();
+            var mi = date.getMinutes();
+            var s = date.getSeconds();
+            var sss = date.getMilliseconds();
+            return y+'-'+(m<10?('0'+m):m)+'-'+(d<10?('0'+d):d)+' '+(h<10?('0'+h):h)+":"+(mi<10?('0'+mi):mi)+":"+(s<10?('0'+s):s)+'.'+sss;
+        }
+        function feature_formatItem(row){
+            //返回的是一个json数组对象，每一个row，是一个行对象，是json的成员之一，调用键属性，返回值。
+            var s = '<span style="font:normal 12px 宋体">' + row.name + '</span>';
+            return s;
+        }
+        <!--模糊查询-->
+        function submit_featureSearch() {
+            var searchvalue = $("#feature_search").val();
+            ovalue = searchvalue;
+            $('#feature_dg').datagrid('load', {
+                searchvalue:searchvalue
+            });
+        }
+        // //全选,以下可有可无
+        // function myCheckAll() {
+        //     $('#feature_dg').datagrid('checkAll');//勾选当前页中的所有行。
+        // }
+        // function myUncheckAll(){
+        //     $('#feature_dg').datagrid('uncheckAll');//取消勾选当前页中的所有行。
+        // }
+        // //刷新
+        // function myReload() {
+        //     $('#feature_dg').datagrid('reload');
+        // }
+        <!--工具栏弹出表单新增窗口-->
+        function submit_featureAdd(){
+            $('#form_feature_add').form('submit',{
+                    url:'../add_featureAction',
+                    onSubmit:function(){
+                        //return false;
+                    },
+                    success:function(data){
+//                    alert(data);
+                        if(data>0){
+                            $('#win_feature_add').window('close');
+                            $('#feature_dg').datagrid('reload');
+                            $.messager.show({
+                                title:"添加提示",
+                                msg:"添加成功",
+                                timeout:"3000",
+                                showType:"slide"
+                            });
+                        }
+                    }
+                }
+            );
+        }
+        //   关闭弹窗
+        function win_feature_close(selectid){
+            $(selectid).window('close');
+        }
+        //   关闭对话框
+        function dialog_feature_close(selectid){
+            $(selectid).dialog('close');
+        }
+        $.parser.parse("#feature_content");
+    </script>
+</div>
+</body>
+</html>

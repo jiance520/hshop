@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.Product_styleMapper" >
+  <resultMap id="BaseResultMap" type="com.entity.Product_style" >
+    <id column="STYLEID" property="styleid" jdbcType="DECIMAL" />
+    <result column="COLOR" property="color" jdbcType="OTHER" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    STYLEID, COLOR, REMARK
+  </sql>
+
+  <select id="selectStyleAll" resultMap="BaseResultMap">
+    SELECT * from PRODUCT_STYLE
+  </select>
+  <select id="select_styleMap" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT * from PRODUCT_STYLE
+    <choose>
+      <when test="searchvalue!=null and searchvalue!=''">
+        where STYLEID||COLOR||REMARK
+        LIKE '%'||#{searchvalue}||'%'
+        <if test="styleid!=null and styleid!=''">
+          and STYLEID = #{styleid}
+        </if>
+      </when>
+      <otherwise>
+        <if test="styleid!=null and styleid!=''">
+          where STYLEID = #{styleid}
+        </if>
+      </otherwise>
+    </choose>
+    <if test="sort != null and sort!=''">
+      order by ${sort}
+      <if test="order != null and order !=''">${order}</if>
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from QSHOP.PRODUCT_STYLE
+    where STYLEID = #{styleid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from QSHOP.PRODUCT_STYLE
+    where STYLEID = #{styleid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Product_style" >
+    <selectKey keyProperty="styleid" resultType="long" order="BEFORE">
+      SELECT QSHOP_STYLE_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.PRODUCT_STYLE (STYLEID, COLOR, REMARK
+      )
+    values (#{styleid,jdbcType=DECIMAL}, #{color,jdbcType=OTHER}, #{remark,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Product_style" >
+    <selectKey keyProperty="styleid" resultType="long" order="BEFORE">
+      SELECT QSHOP_STYLE_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.PRODUCT_STYLE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="styleid != null" >
+        STYLEID,
+      </if>
+      <if test="color != null" >
+        COLOR,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="styleid != null" >
+        #{styleid,jdbcType=DECIMAL},
+      </if>
+      <if test="color != null" >
+        #{color,jdbcType=OTHER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Product_style" >
+    update QSHOP.PRODUCT_STYLE
+    <set >
+      <if test="color != null" >
+        COLOR = #{color,jdbcType=OTHER},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where STYLEID = #{styleid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Product_style" >
+    update QSHOP.PRODUCT_STYLE
+    set COLOR = #{color,jdbcType=OTHER},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where STYLEID = #{styleid,jdbcType=DECIMAL}
+  </update>
+</mapper>

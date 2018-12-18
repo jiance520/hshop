@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.FriendshipMapper" >
+  <resultMap id="BaseResultMap" type="com.entity.Friendship" >
+    <id column="FID" property="fid" jdbcType="DECIMAL" />
+    <result column="LINK" property="link" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    FID, LINK, NAME, REMARK
+  </sql>
+
+  <select id="select_friendshipAll" resultMap="BaseResultMap">
+    SELECT * from FRIENDSHIP
+  </select>
+  <select id="select_friendshipMap" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT * from FRIENDSHIP
+    <choose>
+      <when test="searchvalue!=null and searchvalue!=''">
+        where FID||LINK||NAME||REMARK
+        LIKE '%'||#{searchvalue}||'%'
+        <if test="fid!=null and fid!=''">
+          and FID = #{fid}
+        </if>
+      </when>
+      <otherwise>
+        <if test="fid!=null and fid!=''">
+          where FID = #{fid}
+        </if>
+      </otherwise>
+    </choose>
+    <if test="sort != null and sort!=''">
+      order by ${sort}
+      <if test="order != null and order !=''">${order}</if>
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from QSHOP.FRIENDSHIP
+    where FID = #{fid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from QSHOP.FRIENDSHIP
+    where FID = #{fid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Friendship" >
+    <selectKey keyProperty="fid" resultType="long" order="BEFORE">
+      SELECT QSHOP_FRI_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.FRIENDSHIP (FID, LINK, NAME, 
+      REMARK)
+    values (#{fid,jdbcType=DECIMAL}, #{link,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Friendship" >
+    <selectKey keyProperty="fid" resultType="long" order="BEFORE">
+      SELECT QSHOP_FRI_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.FRIENDSHIP
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        FID,
+      </if>
+      <if test="link != null" >
+        LINK,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fid != null" >
+        #{fid,jdbcType=DECIMAL},
+      </if>
+      <if test="link != null" >
+        #{link,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Friendship" >
+    update QSHOP.FRIENDSHIP
+    <set >
+      <if test="link != null" >
+        LINK = #{link,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where FID = #{fid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Friendship" >
+    update QSHOP.FRIENDSHIP
+    set LINK = #{link,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where FID = #{fid,jdbcType=DECIMAL}
+  </update>
+</mapper>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.AdvertMapper" >
+  <resultMap id="BaseResultMap" type="com.entity.Advert" >
+    <id column="AID" property="aid" jdbcType="DECIMAL" />
+    <result column="IMG" property="img" jdbcType="VARCHAR" />
+    <result column="LINK" property="link" jdbcType="VARCHAR" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    AID, IMG, LINK, TITLE
+  </sql>
+
+  <select id="select_advertAll" resultMap="BaseResultMap">
+    SELECT * from ADVERT
+  </select>
+  <select id="select_advertMap" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT * from ADVERT
+    <choose>
+      <when test="searchvalue!=null and searchvalue!=''">
+        where AID||IMG||LINK||TITLE
+        LIKE '%'||#{searchvalue}||'%'
+        <if test="aid!=null and aid!=''">
+          and AID = #{aid}
+        </if>
+      </when>
+      <otherwise>
+        <if test="aid!=null and aid!=''">
+          where AID = #{aid}
+        </if>
+      </otherwise>
+    </choose>
+    <if test="sort != null and sort!=''">
+      order by ${sort}
+      <if test="order != null and order !=''">${order}</if>
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from QSHOP.ADVERT
+    where AID = #{aid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from QSHOP.ADVERT
+    where AID = #{aid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Advert" >
+    <selectKey keyProperty="aid" resultType="long" order="BEFORE">
+      SELECT QSHOP_AD_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.ADVERT (AID, IMG, LINK, 
+      TITLE)
+    values (#{aid,jdbcType=DECIMAL}, #{img,jdbcType=VARCHAR}, #{link,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Advert" >
+    <selectKey keyProperty="aid" resultType="long" order="BEFORE">
+      SELECT QSHOP_AD_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.ADVERT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="aid != null" >
+        AID,
+      </if>
+      <if test="img != null" >
+        IMG,
+      </if>
+      <if test="link != null" >
+        LINK,
+      </if>
+      <if test="title != null" >
+        TITLE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="aid != null" >
+        #{aid,jdbcType=DECIMAL},
+      </if>
+      <if test="img != null" >
+        #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="link != null" >
+        #{link,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Advert" >
+    update QSHOP.ADVERT
+    <set >
+      <if test="img != null" >
+        IMG = #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="link != null" >
+        LINK = #{link,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where AID = #{aid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Advert" >
+    update QSHOP.ADVERT
+    set IMG = #{img,jdbcType=VARCHAR},
+      LINK = #{link,jdbcType=VARCHAR},
+      TITLE = #{title,jdbcType=VARCHAR}
+    where AID = #{aid,jdbcType=DECIMAL}
+  </update>
+</mapper>

@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.ProductMapper" >
+  <resultMap id="BaseResultMap" type="com.entity.Product" >
+    <id column="PRODUCTID" property="productid" jdbcType="DECIMAL" />
+    <result column="ALARMNUM" property="alarmnum" jdbcType="DECIMAL" />
+    <result column="DISCOUNT" property="discount" jdbcType="DECIMAL" />
+    <result column="ISDISCOUNT" property="isdiscount" jdbcType="DECIMAL" />
+    <result column="ONEIMG" property="oneimg" jdbcType="VARCHAR" />
+    <result column="PRICE" property="price" jdbcType="FLOAT" />
+    <result column="PRODUCTNUM" property="productnum" jdbcType="DECIMAL" />
+    <result column="PRODUCTNAME" property="productname" jdbcType="VARCHAR" />
+    <result column="PRODUCTNO" property="productno" jdbcType="OTHER" />
+    <result column="THREEIMG" property="threeimg" jdbcType="VARCHAR" />
+    <result column="TWOIMG" property="twoimg" jdbcType="VARCHAR" />
+    <result column="BRANDID" property="brandid" jdbcType="DECIMAL" />
+    <result column="CPUUNITID" property="cpuunitid" jdbcType="DECIMAL" />
+    <result column="DVDROMID" property="dvdromid" jdbcType="DECIMAL" />
+    <result column="FEATUREID" property="featureid" jdbcType="DECIMAL" />
+    <result column="GENREID" property="genreid" jdbcType="DECIMAL" />
+    <result column="GRAPHICSID" property="graphicsid" jdbcType="DECIMAL" />
+    <result column="HARDDISKID" property="harddiskid" jdbcType="DECIMAL" />
+    <result column="PRODUCTOSID" property="productosid" jdbcType="DECIMAL" />
+    <result column="ROMID" property="romid" jdbcType="DECIMAL" />
+    <result column="SCREENID" property="screenid" jdbcType="DECIMAL" />
+    <result column="PRODUCTSTYLEID" property="productstyleid" jdbcType="DECIMAL" />
+    <result column="PRODUCTDESC" property="productdesc" jdbcType="VARCHAR" />
+    <result column="SUPPLIERID" property="supplierid" jdbcType="DECIMAL" />
+    <result column="LOGDATE" property="logdate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    PRODUCTID, ALARMNUM, DISCOUNT, ISDISCOUNT, ONEIMG, PRICE, PRODUCTNUM, PRODUCTNAME, 
+    PRODUCTNO, THREEIMG, TWOIMG, BRANDID, CPUUNITID, DVDROMID, FEATUREID, GENREID, GRAPHICSID, 
+    HARDDISKID, PRODUCTOSID, ROMID, SCREENID, PRODUCTSTYLEID, PRODUCTDESC, SUPPLIERID, 
+    LOGDATE
+  </sql>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    SELECT * from PRODUCT
+  </select>
+
+  <!--有where又有and时-->
+  <select id="selectProductListMap" resultType="java.util.Map" parameterType="java.util.Map">
+    select * from (select pt.*,po.NAME as os,pr.DRIVENAME as rom,pb.NAME as brand,pg.NAME as genre,psc.DRIVENAME as sreen,pc.DRIVENAME as cpu,pf.NAME as feat,pgr.DRIVENAME as grap,ph.DRIVENAME as disk,pd.DRIVENAME as dvd,su.NAME as sup,pst.COLOR as color
+    from product pt,PRODUCT_OS po,product_rom pr,product_brand pb,product_genre pg,product_screen psc,
+    product_cpu pc,product_feature pf,product_graphics pgr,product_harddisk ph,product_dvdrom pd,supplier su,product_style pst
+    where pt.PRODUCTOSID=po.OSID(+) and pt.ROMID = pr.DRIVEID and pt.BRANDID = pb.BRANDID and pt.GENREID = pg.GENREID and pt.SCREENID=psc.DRIVEID and pt.CPUUNITID=pc.DRIVEID and pt.FEATUREID=pf.FEATUREID(+) and pt.GRAPHICSID=pgr.DRIVEID(+) and pt.HARDDISKID=ph.DRIVEID and pt.DVDROMID= pd.DRIVEID(+) and pt.SUPPLIERID = su.SSID and pt.PRODUCTSTYLEID = pst.STYLEID)myview
+    <choose>
+      <when test="searchvalue!=null and searchvalue!=''">
+        where PRODUCTID||ALARMNUM||DISCOUNT||ISDISCOUNT||ONEIMG||PRICE||PRODUCTNUM||PRODUCTNAME||PRODUCTNO||THREEIMG||TWOIMG||PRODUCTDESC||LOGDATE||os||rom||brand||genre||sreen||cpu||feat||grap||disk||dvd||sup||color
+        LIKE '%'||#{searchvalue}||'%'
+        <if test="arrlong!=null and arrlong!=''">
+          and PRODUCTID in
+          <foreach item="id" collection="arrlong" open="(" separator="," close=")" >
+            #{id}
+          </foreach>
+        </if>
+      </when>
+      <otherwise>
+        <if test="arrlong!=null and arrlong!=''">
+          where PRODUCTID in
+          <foreach item="id" collection="arrlong" index="index" open="(" separator="," close=")" >
+            #{id}
+          </foreach>
+        </if>
+      </otherwise>
+    </choose>
+    <if test="sort != null and sort!=''">
+      order by ${sort}
+      <if test="order != null and order !=''">${order}</if>
+    </if>
+  </select>
+  <select id="selectProductMap" resultType="java.util.Map" parameterType="java.lang.Integer">
+    select * from (select pt.*,po.NAME as os,pr.DRIVENAME as rom,pb.NAME as brand,pg.NAME as genre,psc.DRIVENAME as sreen,pc.DRIVENAME as cpu,pf.NAME as feat,pgr.DRIVENAME as grap,ph.DRIVENAME as disk,pd.DRIVENAME as dvd,su.NAME as sup,pst.COLOR as color
+    from product pt,PRODUCT_OS po,product_rom pr,product_brand pb,product_genre pg,product_screen psc,
+    product_cpu pc,product_feature pf,product_graphics pgr,product_harddisk ph,product_dvdrom pd,supplier su,product_style pst
+    where pt.PRODUCTOSID = po.OSID(+) and pt.ROMID = pr.DRIVEID and pt.BRANDID = pb.BRANDID and pt.GENREID = pg.GENREID and pt.SCREENID=psc.DRIVEID and pt.CPUUNITID=pc.DRIVEID and pt.FEATUREID=pf.FEATUREID(+) and pt.GRAPHICSID=pgr.DRIVEID(+) and pt.HARDDISKID=ph.DRIVEID and pt.DVDROMID= pd.DRIVEID(+) and pt.SUPPLIERID = su.SSID and pt.PRODUCTSTYLEID = pst.STYLEID)myview
+    where PRODUCTID = #{productid}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from QSHOP.PRODUCT
+    where PRODUCTID = #{productid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from QSHOP.PRODUCT
+    where PRODUCTID = #{productid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Product" >
+    <selectKey keyProperty="productid" resultType="long" order="BEFORE">
+      SELECT QSHOP_PRODUCT_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.PRODUCT (PRODUCTID, ALARMNUM, DISCOUNT, 
+      ISDISCOUNT, ONEIMG, PRICE, 
+      PRODUCTNUM, PRODUCTNAME, PRODUCTNO, 
+      THREEIMG, TWOIMG, BRANDID, 
+      CPUUNITID, DVDROMID, FEATUREID, 
+      GENREID, GRAPHICSID, HARDDISKID, 
+      PRODUCTOSID, ROMID, SCREENID, 
+      PRODUCTSTYLEID, PRODUCTDESC, SUPPLIERID, 
+      LOGDATE)
+    values (#{productid,jdbcType=DECIMAL}, #{alarmnum,jdbcType=DECIMAL}, #{discount,jdbcType=DECIMAL}, 
+      #{isdiscount,jdbcType=DECIMAL}, #{oneimg,jdbcType=VARCHAR}, #{price,jdbcType=FLOAT}, 
+      #{productnum,jdbcType=DECIMAL}, #{productname,jdbcType=VARCHAR}, #{productno,jdbcType=OTHER}, 
+      #{threeimg,jdbcType=VARCHAR}, #{twoimg,jdbcType=VARCHAR}, #{brandid,jdbcType=DECIMAL}, 
+      #{cpuunitid,jdbcType=DECIMAL}, #{dvdromid,jdbcType=DECIMAL}, #{featureid,jdbcType=DECIMAL}, 
+      #{genreid,jdbcType=DECIMAL}, #{graphicsid,jdbcType=DECIMAL}, #{harddiskid,jdbcType=DECIMAL}, 
+      #{productosid,jdbcType=DECIMAL}, #{romid,jdbcType=DECIMAL}, #{screenid,jdbcType=DECIMAL}, 
+      #{productstyleid,jdbcType=DECIMAL}, #{productdesc,jdbcType=VARCHAR}, #{supplierid,jdbcType=DECIMAL}, 
+      #{logdate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Product" >
+    <selectKey keyProperty="productid" resultType="long" order="BEFORE">
+      SELECT QSHOP_PRODUCT_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.PRODUCT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="productid != null" >
+        PRODUCTID,
+      </if>
+      <if test="alarmnum != null" >
+        ALARMNUM,
+      </if>
+      <if test="discount != null" >
+        DISCOUNT,
+      </if>
+      <if test="isdiscount != null" >
+        ISDISCOUNT,
+      </if>
+      <if test="oneimg != null" >
+        ONEIMG,
+      </if>
+      <if test="price != null" >
+        PRICE,
+      </if>
+      <if test="productnum != null" >
+        PRODUCTNUM,
+      </if>
+      <if test="productname != null" >
+        PRODUCTNAME,
+      </if>
+      <if test="productno != null" >
+        PRODUCTNO,
+      </if>
+      <if test="threeimg != null" >
+        THREEIMG,
+      </if>
+      <if test="twoimg != null" >
+        TWOIMG,
+      </if>
+      <if test="brandid != null" >
+        BRANDID,
+      </if>
+      <if test="cpuunitid != null" >
+        CPUUNITID,
+      </if>
+      <if test="dvdromid != null" >
+        DVDROMID,
+      </if>
+      <if test="featureid != null" >
+        FEATUREID,
+      </if>
+      <if test="genreid != null" >
+        GENREID,
+      </if>
+      <if test="graphicsid != null" >
+        GRAPHICSID,
+      </if>
+      <if test="harddiskid != null" >
+        HARDDISKID,
+      </if>
+      <if test="productosid != null" >
+        PRODUCTOSID,
+      </if>
+      <if test="romid != null" >
+        ROMID,
+      </if>
+      <if test="screenid != null" >
+        SCREENID,
+      </if>
+      <if test="productstyleid != null" >
+        PRODUCTSTYLEID,
+      </if>
+      <if test="productdesc != null" >
+        PRODUCTDESC,
+      </if>
+      <if test="supplierid != null" >
+        SUPPLIERID,
+      </if>
+      <if test="logdate != null" >
+        LOGDATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="productid != null" >
+        #{productid,jdbcType=DECIMAL},
+      </if>
+      <if test="alarmnum != null" >
+        #{alarmnum,jdbcType=DECIMAL},
+      </if>
+      <if test="discount != null" >
+        #{discount,jdbcType=DECIMAL},
+      </if>
+      <if test="isdiscount != null" >
+        #{isdiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="oneimg != null" >
+        #{oneimg,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=FLOAT},
+      </if>
+      <if test="productnum != null" >
+        #{productnum,jdbcType=DECIMAL},
+      </if>
+      <if test="productname != null" >
+        #{productname,jdbcType=VARCHAR},
+      </if>
+      <if test="productno != null" >
+        #{productno,jdbcType=OTHER},
+      </if>
+      <if test="threeimg != null" >
+        #{threeimg,jdbcType=VARCHAR},
+      </if>
+      <if test="twoimg != null" >
+        #{twoimg,jdbcType=VARCHAR},
+      </if>
+      <if test="brandid != null" >
+        #{brandid,jdbcType=DECIMAL},
+      </if>
+      <if test="cpuunitid != null" >
+        #{cpuunitid,jdbcType=DECIMAL},
+      </if>
+      <if test="dvdromid != null" >
+        #{dvdromid,jdbcType=DECIMAL},
+      </if>
+      <if test="featureid != null" >
+        #{featureid,jdbcType=DECIMAL},
+      </if>
+      <if test="genreid != null" >
+        #{genreid,jdbcType=DECIMAL},
+      </if>
+      <if test="graphicsid != null" >
+        #{graphicsid,jdbcType=DECIMAL},
+      </if>
+      <if test="harddiskid != null" >
+        #{harddiskid,jdbcType=DECIMAL},
+      </if>
+      <if test="productosid != null" >
+        #{productosid,jdbcType=DECIMAL},
+      </if>
+      <if test="romid != null" >
+        #{romid,jdbcType=DECIMAL},
+      </if>
+      <if test="screenid != null" >
+        #{screenid,jdbcType=DECIMAL},
+      </if>
+      <if test="productstyleid != null" >
+        #{productstyleid,jdbcType=DECIMAL},
+      </if>
+      <if test="productdesc != null" >
+        #{productdesc,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierid != null" >
+        #{supplierid,jdbcType=DECIMAL},
+      </if>
+      <if test="logdate != null" >
+        #{logdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Product" >
+    update QSHOP.PRODUCT
+    <set >
+      <if test="alarmnum != null" >
+        ALARMNUM = #{alarmnum,jdbcType=DECIMAL},
+      </if>
+      <if test="discount != null" >
+        DISCOUNT = #{discount,jdbcType=DECIMAL},
+      </if>
+      <if test="isdiscount != null" >
+        ISDISCOUNT = #{isdiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="oneimg != null" >
+        ONEIMG = #{oneimg,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=FLOAT},
+      </if>
+      <if test="productnum != null" >
+        PRODUCTNUM = #{productnum,jdbcType=DECIMAL},
+      </if>
+      <if test="productname != null" >
+        PRODUCTNAME = #{productname,jdbcType=VARCHAR},
+      </if>
+      <if test="productno != null" >
+        PRODUCTNO = #{productno,jdbcType=OTHER},
+      </if>
+      <if test="threeimg != null" >
+        THREEIMG = #{threeimg,jdbcType=VARCHAR},
+      </if>
+      <if test="twoimg != null" >
+        TWOIMG = #{twoimg,jdbcType=VARCHAR},
+      </if>
+      <if test="brandid != null" >
+        BRANDID = #{brandid,jdbcType=DECIMAL},
+      </if>
+      <if test="cpuunitid != null" >
+        CPUUNITID = #{cpuunitid,jdbcType=DECIMAL},
+      </if>
+      <if test="dvdromid != null" >
+        DVDROMID = #{dvdromid,jdbcType=DECIMAL},
+      </if>
+      <if test="featureid != null" >
+        FEATUREID = #{featureid,jdbcType=DECIMAL},
+      </if>
+      <if test="genreid != null" >
+        GENREID = #{genreid,jdbcType=DECIMAL},
+      </if>
+      <if test="graphicsid != null" >
+        GRAPHICSID = #{graphicsid,jdbcType=DECIMAL},
+      </if>
+      <if test="harddiskid != null" >
+        HARDDISKID = #{harddiskid,jdbcType=DECIMAL},
+      </if>
+      <if test="productosid != null" >
+        PRODUCTOSID = #{productosid,jdbcType=DECIMAL},
+      </if>
+      <if test="romid != null" >
+        ROMID = #{romid,jdbcType=DECIMAL},
+      </if>
+      <if test="screenid != null" >
+        SCREENID = #{screenid,jdbcType=DECIMAL},
+      </if>
+      <if test="productstyleid != null" >
+        PRODUCTSTYLEID = #{productstyleid,jdbcType=DECIMAL},
+      </if>
+      <if test="productdesc != null" >
+        PRODUCTDESC = #{productdesc,jdbcType=VARCHAR},
+      </if>
+      <if test="supplierid != null" >
+        SUPPLIERID = #{supplierid,jdbcType=DECIMAL},
+      </if>
+      <if test="logdate != null" >
+        LOGDATE = #{logdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where PRODUCTID = #{productid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Product" >
+    update QSHOP.PRODUCT
+    set ALARMNUM = #{alarmnum,jdbcType=DECIMAL},
+      DISCOUNT = #{discount,jdbcType=DECIMAL},
+      ISDISCOUNT = #{isdiscount,jdbcType=DECIMAL},
+      ONEIMG = #{oneimg,jdbcType=VARCHAR},
+      PRICE = #{price,jdbcType=FLOAT},
+      PRODUCTNUM = #{productnum,jdbcType=DECIMAL},
+      PRODUCTNAME = #{productname,jdbcType=VARCHAR},
+      PRODUCTNO = #{productno,jdbcType=OTHER},
+      THREEIMG = #{threeimg,jdbcType=VARCHAR},
+      TWOIMG = #{twoimg,jdbcType=VARCHAR},
+      BRANDID = #{brandid,jdbcType=DECIMAL},
+      CPUUNITID = #{cpuunitid,jdbcType=DECIMAL},
+      DVDROMID = #{dvdromid,jdbcType=DECIMAL},
+      FEATUREID = #{featureid,jdbcType=DECIMAL},
+      GENREID = #{genreid,jdbcType=DECIMAL},
+      GRAPHICSID = #{graphicsid,jdbcType=DECIMAL},
+      HARDDISKID = #{harddiskid,jdbcType=DECIMAL},
+      PRODUCTOSID = #{productosid,jdbcType=DECIMAL},
+      ROMID = #{romid,jdbcType=DECIMAL},
+      SCREENID = #{screenid,jdbcType=DECIMAL},
+      PRODUCTSTYLEID = #{productstyleid,jdbcType=DECIMAL},
+      PRODUCTDESC = #{productdesc,jdbcType=VARCHAR},
+      SUPPLIERID = #{supplierid,jdbcType=DECIMAL},
+      LOGDATE = #{logdate,jdbcType=TIMESTAMP}
+    where PRODUCTID = #{productid,jdbcType=DECIMAL}
+  </update>
+</mapper>

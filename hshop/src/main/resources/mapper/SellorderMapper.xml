@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.SellorderMapper" >
+  <resultMap id="BaseResultMap" type="com.entity.Sellorder" >
+    <id column="SOID" property="soid" jdbcType="DECIMAL" />
+    <result column="LOGDATE" property="logdate" jdbcType="TIMESTAMP" />
+    <result column="ORDERNUM" property="ordernum" jdbcType="VARCHAR" />
+    <result column="PAYSTATE" property="paystate" jdbcType="DECIMAL" />
+    <result column="PAYTYPE" property="paytype" jdbcType="VARCHAR" />
+    <result column="SUM" property="sum" jdbcType="DECIMAL" />
+    <result column="EXPRESSID" property="expressid" jdbcType="DECIMAL" />
+    <result column="ORDERSTATEID" property="orderstateid" jdbcType="DECIMAL" />
+    <result column="VIPID" property="vipid" jdbcType="DECIMAL" />
+    <result column="POSTADDR" property="postaddr" jdbcType="VARCHAR" />
+    <result column="POSTNAME" property="postname" jdbcType="VARCHAR" />
+    <result column="POSTPHONE" property="postphone" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+    <result column="STATE" property="state" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    SOID, LOGDATE, ORDERNUM, PAYSTATE, PAYTYPE, SUM, EXPRESSID, ORDERSTATEID, VIPID, 
+    POSTADDR, POSTNAME, POSTPHONE, REMARK, STATE
+  </sql>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+    SELECT * FROM SELLORDER
+  </select>
+  <!--有where又有and时-->
+  <select id="selectSellOrderMapSearchAll" resultType="java.util.Map" parameterType="java.util.Map">
+    select * from (SELECT se.*,ex.NAME,ord.STATETYPE from SELLORDER se,express ex,ORDERSTATE ord where se.expressid=ex.EID and se.ORDERSTATEID=ord.STATEID)myview
+    <choose>
+      <when test="paystate!=null and paystate!=''">
+        where PAYSTATE = #{paystate}
+        <if test="searchvalue!=null and searchvalue!=''">
+          and SOID||LOGDATE||ORDERNUM||PAYTYPE||PAYTYPE||SUM||VIPID||POSTADDR||POSTNAME||POSTPHONE||REMARK
+          LIKE '%'||#{searchvalue}||'%'
+        </if>
+      </when>
+      <otherwise>
+        <if test="searchvalue!=null and searchvalue!=''">
+          where SOID||LOGDATE||ORDERNUM||PAYTYPE||PAYTYPE||SUM||VIPID||POSTADDR||POSTNAME||POSTPHONE||REMARK
+          LIKE '%'||#{searchvalue}||'%'
+        </if>
+      </otherwise>
+    </choose>
+    <if test="sort != null and sort!=''">
+      order by ${sort}
+      <if test="order != null and order !=''">${order}</if>
+    </if>
+  </select>
+
+  <select id="selectByStateId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select * from SELLORDER WHERE ORDERSTATEID = #{orderstateid,jdbcType=DECIMAL}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from QSHOP.SELLORDER
+    where SOID = #{soid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from QSHOP.SELLORDER
+    where SOID = #{soid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Sellorder" >
+    <selectKey keyProperty="soid" resultType="long" order="BEFORE">
+      select QSHOP_SELLORDER_SEQ.nextval from dual
+    </selectKey>
+    insert into QSHOP.SELLORDER (SOID, LOGDATE, ORDERNUM, 
+      PAYSTATE, PAYTYPE, SUM, 
+      EXPRESSID, ORDERSTATEID, VIPID, 
+      POSTADDR, POSTNAME, POSTPHONE, 
+      REMARK, STATE)
+    values (#{soid,jdbcType=DECIMAL}, #{logdate,jdbcType=TIMESTAMP}, #{ordernum,jdbcType=VARCHAR}, 
+      #{paystate,jdbcType=DECIMAL}, #{paytype,jdbcType=VARCHAR}, #{sum,jdbcType=DECIMAL}, 
+      #{expressid,jdbcType=DECIMAL}, #{orderstateid,jdbcType=DECIMAL}, #{vipid,jdbcType=DECIMAL}, 
+      #{postaddr,jdbcType=VARCHAR}, #{postname,jdbcType=VARCHAR}, #{postphone,jdbcType=VARCHAR},
+      #{remark,jdbcType=VARCHAR}, #{state,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Sellorder" >
+    <selectKey keyProperty="soid" resultType="long" order="BEFORE">
+      select QSHOP_SELLORDER_SEQ.nextval from dual
+    </selectKey>
+    insert into QSHOP.SELLORDER
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="soid != null" >
+        SOID,
+      </if>
+      <if test="logdate != null" >
+        LOGDATE,
+      </if>
+      <if test="ordernum != null" >
+        ORDERNUM,
+      </if>
+      <if test="paystate != null" >
+        PAYSTATE,
+      </if>
+      <if test="paytype != null" >
+        PAYTYPE,
+      </if>
+      <if test="sum != null" >
+        SUM,
+      </if>
+      <if test="expressid != null" >
+        EXPRESSID,
+      </if>
+      <if test="orderstateid != null" >
+        ORDERSTATEID,
+      </if>
+      <if test="vipid != null" >
+        VIPID,
+      </if>
+      <if test="postaddr != null" >
+        POSTADDR,
+      </if>
+      <if test="postname != null" >
+        POSTNAME,
+      </if>
+      <if test="postphone != null" >
+        POSTPHONE,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="state != null" >
+        STATE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="soid != null" >
+        #{soid,jdbcType=DECIMAL},
+      </if>
+      <if test="logdate != null" >
+        #{logdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ordernum != null" >
+        #{ordernum,jdbcType=VARCHAR},
+      </if>
+      <if test="paystate != null" >
+        #{paystate,jdbcType=DECIMAL},
+      </if>
+      <if test="paytype != null" >
+        #{paytype,jdbcType=VARCHAR},
+      </if>
+      <if test="sum != null" >
+        #{sum,jdbcType=DECIMAL},
+      </if>
+      <if test="expressid != null" >
+        #{expressid,jdbcType=DECIMAL},
+      </if>
+      <if test="orderstateid != null" >
+        #{orderstateid,jdbcType=DECIMAL},
+      </if>
+      <if test="vipid != null" >
+        #{vipid,jdbcType=DECIMAL},
+      </if>
+      <if test="postaddr != null" >
+        #{postaddr,jdbcType=VARCHAR},
+      </if>
+      <if test="postname != null" >
+        #{postname,jdbcType=VARCHAR},
+      </if>
+      <if test="postphone != null" >
+        #{postphone,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Sellorder" >
+    update QSHOP.SELLORDER
+    <set >
+      <if test="logdate != null" >
+        LOGDATE = #{logdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ordernum != null" >
+        ORDERNUM = #{ordernum,jdbcType=VARCHAR},
+      </if>
+      <if test="paystate != null" >
+        PAYSTATE = #{paystate,jdbcType=DECIMAL},
+      </if>
+      <if test="paytype != null" >
+        PAYTYPE = #{paytype,jdbcType=VARCHAR},
+      </if>
+      <if test="sum != null" >
+        SUM = #{sum,jdbcType=DECIMAL},
+      </if>
+      <if test="expressid != null" >
+        EXPRESSID = #{expressid,jdbcType=DECIMAL},
+      </if>
+      <if test="orderstateid != null" >
+        ORDERSTATEID = #{orderstateid,jdbcType=DECIMAL},
+      </if>
+      <if test="vipid != null" >
+        VIPID = #{vipid,jdbcType=DECIMAL},
+      </if>
+      <if test="postaddr != null" >
+        POSTADDR = #{postaddr,jdbcType=VARCHAR},
+      </if>
+      <if test="postname != null" >
+        POSTNAME = #{postname,jdbcType=VARCHAR},
+      </if>
+      <if test="postphone != null" >
+        POSTPHONE = #{postphone,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        STATE = #{state,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where SOID = #{soid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Sellorder" >
+    update QSHOP.SELLORDER
+    set LOGDATE = #{logdate,jdbcType=TIMESTAMP},
+      ORDERNUM = #{ordernum,jdbcType=VARCHAR},
+      PAYSTATE = #{paystate,jdbcType=DECIMAL},
+      PAYTYPE = #{paytype,jdbcType=VARCHAR},
+      SUM = #{sum,jdbcType=DECIMAL},
+      EXPRESSID = #{expressid,jdbcType=DECIMAL},
+      ORDERSTATEID = #{orderstateid,jdbcType=DECIMAL},
+      VIPID = #{vipid,jdbcType=DECIMAL},
+      POSTADDR = #{postaddr,jdbcType=VARCHAR},
+      POSTNAME = #{postname,jdbcType=VARCHAR},
+      POSTPHONE = #{postphone,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      STATE = #{state,jdbcType=DECIMAL}
+    where SOID = #{soid,jdbcType=DECIMAL}
+  </update>
+</mapper>

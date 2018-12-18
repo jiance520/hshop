@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.CommentsMapper" >
+  <resultMap id="BaseResultMap" type="com.entity.Comments" >
+    <id column="COMMENTID" property="commentid" jdbcType="DECIMAL" />
+    <result column="ADDDATE" property="adddate" jdbcType="TIMESTAMP" />
+    <result column="CONTENT" property="content" jdbcType="VARCHAR" />
+    <result column="IPADDRESS" property="ipaddress" jdbcType="VARCHAR" />
+    <result column="ISREAD" property="isread" jdbcType="DECIMAL" />
+    <result column="PRODUCTID" property="productid" jdbcType="DECIMAL" />
+    <result column="REPLYCONTENT" property="replycontent" jdbcType="VARCHAR" />
+    <result column="REPLYDATE" property="replydate" jdbcType="TIMESTAMP" />
+    <result column="REPLYID" property="replyid" jdbcType="DECIMAL" />
+    <result column="TITLE" property="title" jdbcType="VARCHAR" />
+    <result column="VIPID" property="vipid" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    COMMENTID, ADDDATE, CONTENT, IPADDRESS, ISREAD, PRODUCTID, REPLYCONTENT, REPLYDATE, 
+    REPLYID, TITLE, VIPID
+  </sql>
+
+  <select id="select_commentsAll" resultMap="BaseResultMap">
+    SELECT * from COMMENTS
+  </select>
+  <select id="select_commentsMap" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT * from COMMENTS
+    <choose>
+      <when test="searchvalue!=null and searchvalue!=''">
+        where COMMENTID||ADDDATE||CONTENT||IPADDRESS||ISREAD||PRODUCTID||REPLYCONTENT||REPLYDATE||REPLYID||TITLE||VIPID
+        LIKE '%'||#{searchvalue}||'%'
+        <if test="commentid!=null and commentid!=''">
+          and COMMENTID = #{commentid}
+        </if>
+      </when>
+      <otherwise>
+        <if test="commentid!=null and commentid!=''">
+          where COMMENTID = #{commentid}
+        </if>
+      </otherwise>
+    </choose>
+    <if test="sort != null and sort!=''">
+      order by ${sort}
+      <if test="order != null and order !=''">${order}</if>
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from QSHOP.COMMENTS
+    where COMMENTID = #{commentid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from QSHOP.COMMENTS
+    where COMMENTID = #{commentid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Comments" >
+    <selectKey keyProperty="commentid" resultType="long" order="BEFORE">
+      SELECT QSHOP_CMT_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.COMMENTS (COMMENTID, ADDDATE, CONTENT, 
+      IPADDRESS, ISREAD, PRODUCTID, 
+      REPLYCONTENT, REPLYDATE, REPLYID, 
+      TITLE, VIPID)
+    values (#{commentid,jdbcType=DECIMAL}, #{adddate,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}, 
+      #{ipaddress,jdbcType=VARCHAR}, #{isread,jdbcType=DECIMAL}, #{productid,jdbcType=DECIMAL}, 
+      #{replycontent,jdbcType=VARCHAR}, #{replydate,jdbcType=TIMESTAMP}, #{replyid,jdbcType=DECIMAL}, 
+      #{title,jdbcType=VARCHAR}, #{vipid,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Comments" >
+    <selectKey keyProperty="commentid" resultType="long" order="BEFORE">
+      SELECT QSHOP_CMT_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.COMMENTS
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="commentid != null" >
+        COMMENTID,
+      </if>
+      <if test="adddate != null" >
+        ADDDATE,
+      </if>
+      <if test="content != null" >
+        CONTENT,
+      </if>
+      <if test="ipaddress != null" >
+        IPADDRESS,
+      </if>
+      <if test="isread != null" >
+        ISREAD,
+      </if>
+      <if test="productid != null" >
+        PRODUCTID,
+      </if>
+      <if test="replycontent != null" >
+        REPLYCONTENT,
+      </if>
+      <if test="replydate != null" >
+        REPLYDATE,
+      </if>
+      <if test="replyid != null" >
+        REPLYID,
+      </if>
+      <if test="title != null" >
+        TITLE,
+      </if>
+      <if test="vipid != null" >
+        VIPID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="commentid != null" >
+        #{commentid,jdbcType=DECIMAL},
+      </if>
+      <if test="adddate != null" >
+        #{adddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="ipaddress != null" >
+        #{ipaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="isread != null" >
+        #{isread,jdbcType=DECIMAL},
+      </if>
+      <if test="productid != null" >
+        #{productid,jdbcType=DECIMAL},
+      </if>
+      <if test="replycontent != null" >
+        #{replycontent,jdbcType=VARCHAR},
+      </if>
+      <if test="replydate != null" >
+        #{replydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="replyid != null" >
+        #{replyid,jdbcType=DECIMAL},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="vipid != null" >
+        #{vipid,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Comments" >
+    update QSHOP.COMMENTS
+    <set >
+      <if test="adddate != null" >
+        ADDDATE = #{adddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null" >
+        CONTENT = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="ipaddress != null" >
+        IPADDRESS = #{ipaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="isread != null" >
+        ISREAD = #{isread,jdbcType=DECIMAL},
+      </if>
+      <if test="productid != null" >
+        PRODUCTID = #{productid,jdbcType=DECIMAL},
+      </if>
+      <if test="replycontent != null" >
+        REPLYCONTENT = #{replycontent,jdbcType=VARCHAR},
+      </if>
+      <if test="replydate != null" >
+        REPLYDATE = #{replydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="replyid != null" >
+        REPLYID = #{replyid,jdbcType=DECIMAL},
+      </if>
+      <if test="title != null" >
+        TITLE = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="vipid != null" >
+        VIPID = #{vipid,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where COMMENTID = #{commentid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Comments" >
+    update QSHOP.COMMENTS
+    set ADDDATE = #{adddate,jdbcType=TIMESTAMP},
+      CONTENT = #{content,jdbcType=VARCHAR},
+      IPADDRESS = #{ipaddress,jdbcType=VARCHAR},
+      ISREAD = #{isread,jdbcType=DECIMAL},
+      PRODUCTID = #{productid,jdbcType=DECIMAL},
+      REPLYCONTENT = #{replycontent,jdbcType=VARCHAR},
+      REPLYDATE = #{replydate,jdbcType=TIMESTAMP},
+      REPLYID = #{replyid,jdbcType=DECIMAL},
+      TITLE = #{title,jdbcType=VARCHAR},
+      VIPID = #{vipid,jdbcType=DECIMAL}
+    where COMMENTID = #{commentid,jdbcType=DECIMAL}
+  </update>
+</mapper>

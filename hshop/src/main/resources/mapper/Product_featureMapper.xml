@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dao.Product_featureMapper" >
+  <resultMap id="BaseResultMap" type="com.entity.Product_feature" >
+    <id column="FEATUREID" property="featureid" jdbcType="DECIMAL" />
+    <result column="NAME" property="name" jdbcType="OTHER" />
+    <result column="PARAMETER" property="parameter" jdbcType="VARCHAR" />
+    <result column="REMARK" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    FEATUREID, NAME, PARAMETER, REMARK
+  </sql>
+
+  <select id="selectFeatAll" resultMap="BaseResultMap">
+    SELECT * from PRODUCT_FEATURE
+  </select>
+  <select id="select_featMap" resultType="java.util.Map" parameterType="java.util.Map">
+    SELECT * from PRODUCT_FEATURE
+    <choose>
+      <when test="searchvalue!=null and searchvalue!=''">
+        where FEATUREID||NAME||PARAMETER||REMARK
+        LIKE '%'||#{searchvalue}||'%'
+        <if test="featureid!=null and featureid!=''">
+          and FEATUREID = #{featureid}
+        </if>
+      </when>
+      <otherwise>
+        <if test="featureid!=null and featureid!=''">
+          where FEATUREID = #{featureid}
+        </if>
+      </otherwise>
+    </choose>
+    <if test="sort != null and sort!=''">
+      order by ${sort}
+      <if test="order != null and order !=''">${order}</if>
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from QSHOP.PRODUCT_FEATURE
+    where FEATUREID = #{featureid,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from QSHOP.PRODUCT_FEATURE
+    where FEATUREID = #{featureid,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.entity.Product_feature" >
+    <selectKey keyProperty="featureid" resultType="long" order="BEFORE">
+      SELECT QSHOP_FEATURE_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.PRODUCT_FEATURE (FEATUREID, NAME, PARAMETER, 
+      REMARK)
+    values (#{featureid,jdbcType=DECIMAL}, #{name,jdbcType=OTHER}, #{parameter,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.Product_feature" >
+    <selectKey keyProperty="featureid" resultType="long" order="BEFORE">
+      SELECT QSHOP_FEATURE_SEQ.nextval FROM dual
+    </selectKey>
+    insert into QSHOP.PRODUCT_FEATURE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="featureid != null" >
+        FEATUREID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="parameter != null" >
+        PARAMETER,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="featureid != null" >
+        #{featureid,jdbcType=DECIMAL},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=OTHER},
+      </if>
+      <if test="parameter != null" >
+        #{parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.Product_feature" >
+    update QSHOP.PRODUCT_FEATURE
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=OTHER},
+      </if>
+      <if test="parameter != null" >
+        PARAMETER = #{parameter,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where FEATUREID = #{featureid,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.entity.Product_feature" >
+    update QSHOP.PRODUCT_FEATURE
+    set NAME = #{name,jdbcType=OTHER},
+      PARAMETER = #{parameter,jdbcType=VARCHAR},
+      REMARK = #{remark,jdbcType=VARCHAR}
+    where FEATUREID = #{featureid,jdbcType=DECIMAL}
+  </update>
+</mapper>
