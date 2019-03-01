@@ -2,7 +2,6 @@ package com.test;
 
 
 import com.App;
-import com.entity.*;
 import com.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
