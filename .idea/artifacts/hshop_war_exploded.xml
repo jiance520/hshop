@@ -1,6 +1,13 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="hshop:war exploded">
     <output-path>$PROJECT_DIR$/hshop/target/hshop</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <exploded>true</exploded>
+        <module>hshop</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
@@ -54,7 +61,7 @@
           <element id="library" level="project" name="Maven: com.oracle:ojdbc6:11.2.0.4.0-atlassian-hosted" />
           <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot:2.0.1.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-autoconfigure:2.0.1.RELEASE" />
-          <element id="library" level="project" name="Maven: org.springframework:spring-test:5.1.5.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-test:5.1.6.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-test:2.0.1.RELEASE" />
           <element id="library" level="project" name="Maven: org.apache.poi:poi:3.17" />
           <element id="library" level="project" name="Maven: org.apache.commons:commons-collections4:4.1" />

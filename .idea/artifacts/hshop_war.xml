@@ -1,6 +1,12 @@
 <component name="ArtifactManager">
   <artifact type="war" name="hshop:war">
     <output-path>$PROJECT_DIR$/hshop/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>hshop</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
     <root id="archive" name="hshop.war">
       <element id="artifact" artifact-name="hshop:war exploded" />
     </root>
