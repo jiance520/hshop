@@ -2828,3 +2828,6 @@ java.sql.SQLException: ORA-28001: the password has expired
 [DEBUG]2019-05-05 02:22:43,463-==>  Preparing: SELECT * from PRODUCT_ROM 
 [DEBUG]2019-05-05 02:22:43,580-==> Parameters: 
 [DEBUG]2019-05-05 02:22:43,737-<==      Total: 4
+[DEBUG]2019-05-05 22:32:31,578-==>  Preparing: SELECT * from PRODUCT_ROM 
+[DEBUG]2019-05-05 22:32:31,702-==> Parameters: 
+[DEBUG]2019-05-05 22:32:31,893-<==      Total: 4

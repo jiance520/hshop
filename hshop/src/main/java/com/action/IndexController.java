@@ -1684,10 +1684,10 @@ public class IndexController implements ServletContextAware {
         System.out.println("-----password:"+password);
         Map map = new HashMap();
         map.put("username",username);
-//        String pwd_encoded = UserPasswordUtil.encode(password);//进行加密
-//        System.out.println("-----decode_password:"+pwd_encoded);
-//        map.put("password",pwd_encoded);
-        map.put("password",password);
+        String pwd_encoded = UserPasswordUtil.encode(password);//进行加密
+        System.out.println("-----decode_password:"+pwd_encoded);
+        map.put("password",pwd_encoded);
+//        map.put("password",password);
         Manager manager = imanagerService.selectLogin(map);
 //        以下注释部分用来代替注册用户
 //        if(manager==null){
