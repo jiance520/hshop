@@ -174,7 +174,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             }
         });
     }
-    //  重置123
+    //  重置
     function clearForm(){
         $('#ffindex').form('clear');
     }
