@@ -1682,10 +1682,12 @@ public class IndexController implements ServletContextAware {
     @RequestMapping("loginAction")
     public ModelAndView loginAction(ModelAndView mav,String username, String password, HttpSession session,HttpServletRequest request) throws Exception {
         System.out.println("-----password:"+password);
+        System.out.println("-----username:"+username);
+        System.out.println("-----username:"+request.getParameter("username"));
         Map map = new HashMap();
         map.put("username",username);
         String pwd_encoded = UserPasswordUtil.encode(password);//进行加密
-        System.out.println("-----decode_password:"+pwd_encoded);
+        System.out.println("-----pwd_encoded:"+pwd_encoded);
         map.put("password",pwd_encoded);
 //        map.put("password",password);
         Manager manager = imanagerService.selectLogin(map);
@@ -1796,7 +1798,7 @@ public class IndexController implements ServletContextAware {
             ct=arrchar[it];
             str=str+String.valueOf(ct);
         }
-        return str;
+        return "123456";//str
     }
     //获得随机颜色
     protected Color getRandColor(int fc, int bc){

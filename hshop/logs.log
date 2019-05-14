@@ -3108,3 +3108,6 @@ Caused by: oracle.net.ns.NetException: Invalid connection string format, a valid
 [DEBUG]2019-05-05 23:56:20,953-==>  Preparing: SELECT * from PRODUCT_ROM 
 [DEBUG]2019-05-05 23:56:21,051-==> Parameters: 
 [DEBUG]2019-05-05 23:56:21,176-<==      Total: 4
+[DEBUG]2019-05-14 21:32:26,838-==>  Preparing: SELECT * from PRODUCT_ROM 
+[DEBUG]2019-05-14 21:32:26,980-==> Parameters: 
+[DEBUG]2019-05-14 21:32:27,168-<==      Total: 4
