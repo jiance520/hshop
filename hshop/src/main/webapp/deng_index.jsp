@@ -174,7 +174,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             }
         });
     }
-    //  重置订单
+    //  重置
     function clearForm(){
         $('#ffindex').form('clear');
     }
