@@ -127,24 +127,27 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <div class="form-group" style="margin-right:0;margin-left:0;text-align: right">
             <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" style="padding:0;" for="password">密码:</label>
             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" style="margin-right:0;margin-left:0;">
-                <input type="password" style="" class="form-control" name="password" placeholder="123" id="password" required autofocus/>
+                <input type="password" style="" class="form-control" name="password" placeholder="123" id="password" required/>
             </div>
+        </div>
+        <div class="form-group" style="margin-right:0;margin-left:0;text-align:center">
+            <span class="div-a text-center" id="fail" style="color: red">${fail}</span>
         </div>
         <div class="form-group" style="margin-right:0;margin-left:0;text-align: right">
             <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" style="padding:0;" for="v-code">验证码:</label>
             <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5" style="margin-right:0;margin-left:0;padding-right:0;">
-                <input type="text" style="padding-right:0;" class="form-control" id="v-code" required autofocus/>
+                <input type="text" style="padding-right:0;" class="form-control veryCode" id="v-code" required autofocus/>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" id="vc_div" style="margin-right:0;margin-left:0;padding-left:0;text-align: center;">
                 <img id="veryCode" src="ImageAction" style="padding-right:0;" alt=""/>
             </div>
         </div>
-        <div class="form-group" style="margin-right:0;margin-left:0;text-align: right">
-            <button type="submit" class="log-button col-lg-3 col-md-3 col-sm-3 col-xs-3 btn btn-primary" onclick="submitForm()">登陆</button>
-            <button class="reg-button col-lg-3 col-md-3 col-sm-3 col-xs-3 btn btn-primary">注册</button>
-        </div>
         <div class="form-group" style="margin-right:0;margin-left:0;text-align:center">
             <span class="div-a text-center" id="error" style="color: red"></span>
+        </div>
+        <div class="form-group" style="margin-right:0;margin-left:0;text-align: right">
+            <button type="button" class="log-button col-lg-3 col-md-3 col-sm-3 col-xs-3 btn btn-primary" onclick="submitForm()">登陆</button>
+            <button type="button" class="reg-button col-lg-3 col-md-3 col-sm-3 col-xs-3 btn btn-primary">注册</button>
         </div>
         <div class="form-group" style="margin-right:0;margin-left:0;text-align:center">
             <a class="div-a text-center" href="javascript:void(0)">忘记密码</a>
@@ -166,42 +169,56 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </footer>
 <script type="text/javascript">
     function submitForm(){
-        $('#ffindex').submit(function () {
-            var content = $("#error").html();
-            if(content!=''){
-                alert("验证码错误");
-                return false;
-            }
-        });
+        $('#ffindex').submit();
+        // $('#ffindex').submit(function () {
+        //     alert(1);
+        //     var content = $("#error").html();
+        //     if(content!=''){
+        //         alert("验证码错误");
+        //         return false;
+        //     }
+        // });
     }
     //  重置
     function clearForm(){
         $('#ffindex').form('clear');
     }
-    $(document).ready(function(){
+    window.onload=function(){
 //      点击更新验证码
-        $("#veryCode").click(function(){
+        let veryCodeImg = $("#veryCode");
+        let veryCodeInput = $(".veryCode");
+        veryCodeImg.click(function(){
             var vs = "ImageAction?times="+new Date();
             $(this).attr("src",vs);
             $("#error").html("");/*清空错误提示*/
-        })
-        $(".veryCode").focus(function () {
+        });
+        veryCodeInput.focus(function () {
             $("#error").html("");
         });
+
 //      失去光标验证验证码，如果有错误提示信息，不能提交表单
-        $(".veryCode").blur(function(){
-            var val = $('.veryCode').val();
+        veryCodeInput.blur(function(){
+            var val = veryCodeInput.val();
             $.post("CheckCodeAction",{"value":val},function(data){
-                if(data=="true"){
+                if(data==="true"){
                     $("#error").html("");
                 }
                 else{
-                    $(".veryCode").val("");
+                    veryCodeInput.val("");
                     $("#error").html("验证码错误");
                 }
             },"text");
-        })
-    });
+        });
+        //帐号或密码错误时
+        var fail = '${fail}';
+        var failNode = $("#fail");
+        if(fail!=null&&fail!=false){
+            failNode.html(fail);
+        }
+        $("#password").focus(function () {
+            failNode.html("");
+        });
+    };
 </script>
 </body>
 </html>

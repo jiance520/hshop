@@ -3111,3 +3111,9 @@ Caused by: oracle.net.ns.NetException: Invalid connection string format, a valid
 [DEBUG]2019-05-14 21:32:26,838-==>  Preparing: SELECT * from PRODUCT_ROM 
 [DEBUG]2019-05-14 21:32:26,980-==> Parameters: 
 [DEBUG]2019-05-14 21:32:27,168-<==      Total: 4
+[DEBUG]2019-05-15 21:00:54,654-==>  Preparing: SELECT * from PRODUCT_ROM 
+[DEBUG]2019-05-15 21:00:54,781-==> Parameters: 
+[DEBUG]2019-05-15 21:00:55,225-<==      Total: 4
+[DEBUG]2019-05-15 21:04:22,966-==>  Preparing: SELECT * from PRODUCT_ROM 
+[DEBUG]2019-05-15 21:04:23,084-==> Parameters: 
+[DEBUG]2019-05-15 21:04:23,216-<==      Total: 4

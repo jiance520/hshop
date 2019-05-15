@@ -1683,7 +1683,6 @@ public class IndexController implements ServletContextAware {
     public ModelAndView loginAction(ModelAndView mav,String username, String password, HttpSession session,HttpServletRequest request) throws Exception {
         System.out.println("-----password:"+password);
         System.out.println("-----username:"+username);
-        System.out.println("-----username:"+request.getParameter("username"));
         Map map = new HashMap();
         map.put("username",username);
         String pwd_encoded = UserPasswordUtil.encode(password);//进行加密
@@ -1712,7 +1711,8 @@ public class IndexController implements ServletContextAware {
             mav.setViewName("redirect:/deng_web/hmanager.html?username="+username);
             return mav;
         }else {
-            mav.setViewName("../deng_index");
+            mav.addObject("fail","帐号或密码错误");
+            mav.setViewName("/deng_index");
             return mav;
         }
     }
