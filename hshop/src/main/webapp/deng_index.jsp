@@ -161,7 +161,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
                 <img style="vertical-align: middle;display: inline-block" src="img/beian.png" alt=""/>
                 <span style="vertical-align: middle;display: inline-block;color:#939393;">湘公网安备 43050302000163号</span>
             </a>
-            <a  class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="display: inline-block;text-align:center" target="_blank" href="http://www.miitbeian.gov.cn/">
+            <a  class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="display: inline-block;text-align:center" target="_blank" href="http://www.beian.miit.gov.cn/">
                 <span style="vertical-align: middle;display: inline-block;color:#939393;">湘ICP备18023926号-1</span>
             </a>
         </div>
@@ -212,9 +212,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         //帐号或密码错误时
         var fail = '${fail}';
         var failNode = $("#fail");
-        if(fail!=null&&fail!=false){
-            failNode.html(fail);
-        }
+        // if(fail!=null&&fail!=false){
+        //     failNode.html(fail);
+        // }
         $("#password").focus(function () {
             failNode.html("");
         });
