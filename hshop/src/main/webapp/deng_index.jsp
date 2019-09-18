@@ -117,7 +117,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <!--col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-xs-offset-1-->
     <!--col-lg-pull-1 col-md-pull-1 col-sm-pull-1 col-xs-pull-1-->
     <!--col-lg-push-1 col-md-push-1 col-sm-push-1 col-xs-push-1-->
-    <form id="ffindex" method="post" action="loginAction" class="form-horizontal" style="background-color: rgba(45,255,146,0.04);border: 1px solid #000000;border-radius:5px"><!--class="form-horizontal"-->
+    <form id="ffindex" method="post" action="loginAction" class="form-horizontal" style="background-color: rgba(45,255,146,0.5);border: 1px solid #000000;border-radius:5px"><!--class="form-horizontal"-->
         <div id="token" hidden></div>
         <jsp:include page="token.jsp"></jsp:include>
         <div class="form-group" style="margin-right:0;margin-left:0;text-align: right">
