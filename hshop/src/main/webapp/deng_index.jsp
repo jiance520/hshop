@@ -71,6 +71,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             }
             .control-label{
                 font:normal 30px "微软雅黑 Light";
+                color: white;
             }
             .form-control{
                 font:normal 30px "微软雅黑 Light";
@@ -101,7 +102,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             height: 100%;
             /*background-color:#202121;*/
             /*background-color:#2C143F;*/
-            background-color: rgba(91, 255, 0, 0);
+            background-color: #2B3140;
+            /*background-color: rgba(91, 255, 0, 0);*/
         }
         .footer *{
             font:normal 20px 微软雅黑;
@@ -120,30 +122,28 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <jsp:include page="token.jsp"></jsp:include>
         <div class="form-group" style="margin-right:0;margin-left:0;text-align: right">
             <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" style="padding:0;" for="admin">用户名:</label>
-            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" style="margin-right:0;margin-left:0;">
-                <input type="text" style="" class="form-control" name="username" placeholder="admin" id="admin" required autofocus autocomplete="on"/>
+            <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7" style="margin-right:0;margin-left:0;">
+                <input type="text" style="" class="form-control" name="username" value="admin" placeholder="admin" id="admin" required autofocus autocomplete="on"/>
             </div>
         </div>
+        <div></div>
         <div class="form-group" style="margin-right:0;margin-left:0;text-align: right">
             <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" style="padding:0;" for="password">密码:</label>
-            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" style="margin-right:0;margin-left:0;">
-                <input type="password" style="" class="form-control" name="password" placeholder="123" id="password" required/>
+            <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7" style="margin-right:0;margin-left:0;">
+                <input type="text" style="" class="form-control" name="password" placeholder="" id="password" required/>
             </div>
-        </div>
-        <div class="form-group" style="margin-right:0;margin-left:0;text-align:center">
-            <span class="div-a text-center" id="fail" style="color: red">${fail}</span>
         </div>
         <div class="form-group" style="margin-right:0;margin-left:0;text-align: right">
             <label class="col-lg-3 col-md-3 col-sm-3 col-xs-3 control-label" style="padding:0;" for="v-code">验证码:</label>
-            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5" style="margin-right:0;margin-left:0;padding-right:0;">
-                <input type="text" style="padding-right:0;" class="form-control veryCode" id="v-code" required autofocus/>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3" style="margin-right:0;margin-left:0;padding-right:0;">
+                <input type="text" style="padding-right:0;" class="form-control veryCode" value="123456" placeholder="123456" id="v-code" required autofocus/>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" id="vc_div" style="margin-right:0;margin-left:0;padding-left:0;text-align: center;">
-                <img id="veryCode" src="ImageAction" style="padding-right:0;" alt=""/>
+                <img id="veryCode" src="ImageAction" style="padding-right:0;border-radius: 3px;-moz-border-radius:3px;" alt=""/>
             </div>
         </div>
         <div class="form-group" style="margin-right:0;margin-left:0;text-align:center">
-            <span class="div-a text-center" id="error" style="color: red"></span>
+            <span class="div-a text-center" id="error" style="color: red">${fail}</span>
         </div>
         <div class="form-group" style="margin-right:0;margin-left:0;text-align: right">
             <button type="button" class="log-button col-lg-3 col-md-3 col-sm-3 col-xs-3 btn btn-primary" onclick="submitForm()">登陆</button>
