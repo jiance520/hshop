@@ -20,7 +20,7 @@ import java.util.Map;
 public class JdbcUtil {//工具类，针对不同的数据库，使用同样的jdbc方法。
 	private static Logger logger = Logger.getLogger(JdbcUtil.class.getName());
 	private static String driver = "oracle.jdbc.driver.OracleDriver";//
-	private static String url = "jdbc:oracle:thin:@localhost:1521:orcl";
+	private static String url = "jdbc:oracle:thin:@106.13.100.117:1521:helowin";
 	private static String user = "qshop";
 	private static String password = "qshop";
 	private static Connection conn = null;

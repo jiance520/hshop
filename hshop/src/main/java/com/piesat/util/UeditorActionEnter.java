@@ -8,6 +8,8 @@ import com.baidu.ueditor.define.State;
 import com.baidu.ueditor.hunter.FileManager;
 import com.baidu.ueditor.hunter.ImageHunter;
 import com.baidu.ueditor.upload.Uploader;
+import org.json.JSONException;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 /**
@@ -29,7 +31,7 @@ public class UeditorActionEnter extends ActionEnter {
         this.configManager = ConfigManager.getInstance(this.rootPath, this.contextPath, request.getRequestURI());
     }    
 	@Override    
-	public String invoke() {
+	public String invoke() throws JSONException {
         if (this.actionType != null && ActionMap.mapping.containsKey(this.actionType)) {
             if (this.configManager != null && this.configManager.valid()) {
                 State state = null;
