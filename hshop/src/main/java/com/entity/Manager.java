@@ -1,7 +1,5 @@
 package com.entity;
 
-import javax.validation.constraints.Pattern;
-
 public class Manager {
     private Long mid;
 

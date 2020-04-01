@@ -3,13 +3,16 @@ package com.test;
 
 import com.HshopApp;
 import com.service.*;
+import com.util.JdbcUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.junit.runner.RunWith;
-import java.util.*;
 import org.junit.*;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,11 +79,16 @@ public class TestBean {
     @Autowired
     private IVipService iVipService;
 
+    private static final Logger logger = LoggerFactory.getLogger(TestBean.class);
+
     @Test
     @Transactional
     @Rollback
     public void testAll(){
-        List list = iProduct_romService.selectRomAll();
-        System.out.println(" list = "+list);
+//        List list = iProduct_romService.selectRomAll();
+//        System.out.println(" list = "+list);
+//        Object object = JdbcUtil.exectueQuery("select * from MANAGER");
+//        logger.debug("--logger---test:"+object);
+//        System.out.println("---test:"+object);
     }
 }

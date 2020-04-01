@@ -1,19 +1,14 @@
 package com.action;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.util.JdbcUtil;
 import com.util.PoiUtil;
 import com.util.UserPasswordUtil;
 import org.apache.commons.io.FileUtils;
-import org.apache.ibatis.session.Configuration;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import com.service.*;
 import com.entity.*;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.ServletContextAware;
@@ -31,7 +26,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -239,7 +233,7 @@ public class IndexController implements ServletContextAware {
         return js;
     }
 
-//    加载订单,每次发送给主页的数据只有rows行！当前页，如果要导出全部数据，需要重新查询
+    //    加载订单,每次发送给主页的数据只有rows行！当前页，如果要导出全部数据，需要重新查询
     @ResponseBody
     @RequestMapping(value = "/sellorderAllAction",produces = "application/json;chart=UTF-8")
     public Object sellorderAllAction(Integer page,Integer rows,String sort,String order,String searchvalue){
@@ -719,7 +713,7 @@ public class IndexController implements ServletContextAware {
     @ResponseBody
     @RequestMapping(value = "/update_productAction",produces = "application/json;chart=UTF-8")
     public String update_productAction(HttpServletRequest request,HttpServletResponse response,@RequestParam Map<String,String> map,@RequestParam(required=false) MultipartFile[] files) throws Exception{
-        System.out.println("map"+map);
+        System.out.println("-------map:"+map.toString());
         Product product = new Product();
 //        product.setBrandid(Long.parseLong((String)map.get("BRANDID")));
 //        product.setProductid(Long.parseLong((String)map.get("PRODUCTID")));
@@ -1724,7 +1718,7 @@ public class IndexController implements ServletContextAware {
         js = JSON.toJSONString("true");
         return js;
     }
-//登陆验证码
+    //登陆验证码
     @ResponseBody
     @RequestMapping(value = "CheckCodeAction",produces = "application/json;chart=UTF-8")
     public String checkCodeAction( String value, HttpSession session){
