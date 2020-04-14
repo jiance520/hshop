@@ -39,10 +39,10 @@ public class JdbcUtil {//工具类，针对不同的数据库，使用同样的j
 	//private static Logger logger = Logger.getLogger(JdbcUtil.class.getName());
 	//使用@Value取值，可以读取任意yml或properties格式的属性!，当前类必须加注解被扫描，注解的属性不能是static或final。
 	//JdbcUtil类被new新建了实例，而没有在使用@Autowired(有效!重点！),
-	private String driverName = "com.mysql.jdbc.Driver";//
-	private String datasourceUrl = "jdbc:mysql://localhost:3306/shiro?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8";
-	private String userName = "root";
-	private String password = "root";
+	private String driverName = "oracle.jdbc.driver.OracleDriver";//
+	private String datasourceUrl = "jdbc:oracle:thin//106.13.100.117:1521:helowin";
+	private String userName = "qshop";
+	private String password = "qshop";
 	private String datasourceName;
 	@Value("${spring.datasource.driver-class-name}")
 	private String driverName2;
